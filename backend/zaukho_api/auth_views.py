@@ -17,7 +17,9 @@ def login_view(request):
     username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
-    
+    print('------   ')
+    print(email, password)
+    print('------   ')
     if not password:
         return Response(
             {'detail': 'Password is required.'},

@@ -26,7 +26,14 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await api.auth.login(credentials);
+      // Ensure we're sending both email and username fields
+      // If credentials only has email, use it as username too
+      const loginData = { ...credentials };
+      if (loginData.email && !loginData.username) {
+        loginData.username = loginData.email;
+      }
+      
+      const response = await api.auth.login(loginData);
       const { token, user, refresh } = response.data;
       
       // Store token in localStorage

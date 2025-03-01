@@ -12,6 +12,7 @@ const Login = () => {
   
   const [formData, setFormData] = useState({
     email: '',
+    username: '',
     password: ''
   });
   const [validationErrors, setValidationErrors] = useState({});
@@ -36,10 +37,20 @@ const Login = () => {
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    
+    // If email is being updated, also update username to match
+    if (name === 'email') {
+      setFormData({
+        ...formData,
+        [name]: value,
+        username: value // Keep username in sync with email
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
     
     // Clear error when user starts typing
     if (validationErrors[name]) {
@@ -97,6 +108,7 @@ const Login = () => {
     try {
       const result = await dispatch(login({
         email: 'demo@example.com',
+        username: 'demo@example.com',
         password: 'password123'
       })).unwrap();
       // Success toast is handled in the auth slice
