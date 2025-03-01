@@ -16,9 +16,15 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import MyLibrary from './pages/MyLibrary';
 import NotFound from './pages/NotFound';
-// Import new pages
+// Import existing pages
 import About from './pages/About';
 import Pricing from './pages/Pricing';
+// Import new pages
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
+import RefundPolicy from './pages/RefundPolicy';
+import CancellationPolicy from './pages/CancellationPolicy';
+import ContactUs from './pages/ContactUs';
 
 function App() {
   return (
@@ -36,6 +42,12 @@ function App() {
           <Route path="/my-library" element={<MyLibrary />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
+          {/* New routes */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route path="/cancellation-policy" element={<CancellationPolicy />} />
+          <Route path="/contact" element={<ContactUs />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -46,18 +46,18 @@ const Footer = () => {
             <ul className="footer-links">
               <li><Link to="/about">About Us</Link></li>
               <li><Link to="/contact">Contact Us</Link></li>
+              <li><Link to="/pricing">Pricing</Link></li>
               <li><Link to="/careers">Careers</Link></li>
-              <li><Link to="/blog">Blog</Link></li>
             </ul>
           </div>
           
           <div className="col-md-4">
             <h5 className="footer-heading">Legal</h5>
             <ul className="footer-links">
-              <li><Link to="/terms">Terms of Service</Link></li>
-              <li><Link to="/privacy">Privacy Policy</Link></li>
-              <li><Link to="/refund">Refund Policy</Link></li>
-              <li><Link to="/cancellation">Cancellation Policy</Link></li>
+              <li><Link to="/terms">Terms & Conditions</Link></li>
+              <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+              <li><Link to="/refund-policy">Refund Policy</Link></li>
+              <li><Link to="/cancellation-policy">Cancellation Policy</Link></li>
             </ul>
           </div>
         </div>
