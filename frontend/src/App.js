@@ -12,6 +12,7 @@ import Movies from './pages/Movies';
 import MovieDetail from './pages/MovieDetail';
 import TVSeries from './pages/TVSeries';
 import TVSeriesDetail from './pages/TVSeriesDetail';
+import EpisodeDetail from './pages/EpisodeDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -38,6 +39,7 @@ function App() {
           <Route path="/movies/:id" element={<MovieDetail />} />
           <Route path="/tv-series" element={<TVSeries />} />
           <Route path="/tv-series/:id" element={<TVSeriesDetail />} />
+          <Route path="/tv-series/:seriesId/season/:seasonNumber/episode/:episodeNumber" element={<EpisodeDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
