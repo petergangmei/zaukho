@@ -22,7 +22,7 @@ const Movies = () => {
         id: 1, 
         title: 'The Shawshank Redemption', 
         year: 1994, 
-        poster: 'https://via.placeholder.com/300x450?text=Shawshank',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.3,
         genre: 'Drama'
       },
@@ -30,7 +30,7 @@ const Movies = () => {
         id: 2, 
         title: 'The Godfather', 
         year: 1972, 
-        poster: 'https://via.placeholder.com/300x450?text=Godfather',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.2,
         genre: 'Crime, Drama'
       },
@@ -38,7 +38,7 @@ const Movies = () => {
         id: 3, 
         title: 'The Dark Knight', 
         year: 2008, 
-        poster: 'https://via.placeholder.com/300x450?text=Dark+Knight',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.0,
         genre: 'Action, Crime, Drama'
       },
@@ -46,7 +46,7 @@ const Movies = () => {
         id: 4, 
         title: 'Pulp Fiction', 
         year: 1994, 
-        poster: 'https://via.placeholder.com/300x450?text=Pulp+Fiction',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.9,
         genre: 'Crime, Drama'
       },
@@ -54,7 +54,7 @@ const Movies = () => {
         id: 5, 
         title: 'The Lord of the Rings', 
         year: 2003, 
-        poster: 'https://via.placeholder.com/300x450?text=LOTR',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.9,
         genre: 'Adventure, Fantasy'
       },
@@ -62,7 +62,7 @@ const Movies = () => {
         id: 6, 
         title: 'Inception', 
         year: 2010, 
-        poster: 'https://via.placeholder.com/300x450?text=Inception',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.8,
         genre: 'Action, Adventure, Sci-Fi'
       },
@@ -70,7 +70,7 @@ const Movies = () => {
         id: 7, 
         title: 'The Matrix', 
         year: 1999, 
-        poster: 'https://via.placeholder.com/300x450?text=Matrix',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.7,
         genre: 'Action, Sci-Fi'
       },
@@ -78,7 +78,7 @@ const Movies = () => {
         id: 8, 
         title: 'Parasite', 
         year: 2019, 
-        poster: 'https://via.placeholder.com/300x450?text=Parasite',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.6,
         genre: 'Drama, Thriller'
       },
@@ -86,7 +86,7 @@ const Movies = () => {
         id: 9, 
         title: 'Interstellar', 
         year: 2014, 
-        poster: 'https://via.placeholder.com/300x450?text=Interstellar',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.6,
         genre: 'Adventure, Drama, Sci-Fi'
       }

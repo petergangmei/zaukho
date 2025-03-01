@@ -17,8 +17,8 @@ const EpisodeDetail = () => {
       id: parseInt(seriesId),
       title: 'Breaking Bad',
       years: '2008-2013',
-      poster: 'https://via.placeholder.com/600x900?text=Series+Poster',
-      backdrop: 'https://via.placeholder.com/1200x600?text=Episode+Backdrop',
+      poster: 'https://dummyimage.com/600x900',
+      backdrop: 'https://dummyimage.com/1200x600',
       genre: 'Crime, Drama, Thriller',
       creator: 'Vince Gilligan',
       seasons: [
@@ -33,8 +33,8 @@ const EpisodeDetail = () => {
               airDate: 'Jan 20, 2008',
               director: 'Vince Gilligan',
               synopsis: 'After receiving a terminal cancer diagnosis, a high school chemistry teacher turns to a life of crime.',
-              thumbnail: 'https://via.placeholder.com/400x225?text=Episode+Thumbnail',
-              stillImage: 'https://via.placeholder.com/1200x675?text=Episode+Still',
+              thumbnail: 'https://dummyimage.com/400x225',
+              stillImage: 'https://dummyimage.com/1200x675',
               price: {
                 rent: 1.99,
                 buy: 2.99
@@ -47,8 +47,8 @@ const EpisodeDetail = () => {
               airDate: 'Jan 27, 2008',
               director: 'Adam Bernstein',
               synopsis: 'Walt and Jesse attempt to dispose of the bodies of two rivals but face complications.',
-              thumbnail: 'https://via.placeholder.com/400x225?text=Episode+Thumbnail',
-              stillImage: 'https://via.placeholder.com/1200x675?text=Episode+Still',
+              thumbnail: 'https://dummyimage.com/400x225',
+              stillImage: 'https://dummyimage.com/1200x675',
               price: {
                 rent: 1.99,
                 buy: 2.99
@@ -68,8 +68,8 @@ const EpisodeDetail = () => {
               airDate: 'Mar 8, 2009',
               director: 'Bryan Cranston',
               synopsis: 'Walt and Jesse face the deadly consequences of their actions.',
-              thumbnail: 'https://via.placeholder.com/400x225?text=Episode+Thumbnail',
-              stillImage: 'https://via.placeholder.com/1200x675?text=Episode+Still',
+              thumbnail: 'https://dummyimage.com/400x225',
+              stillImage: 'https://dummyimage.com/1200x675',
               price: {
                 rent: 1.99,
                 buy: 2.99

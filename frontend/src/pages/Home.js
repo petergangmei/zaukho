@@ -6,7 +6,7 @@ const featuredMovie = {
   id: 1,
   title: "The Matrix Resurrections",
   description: "Return to a world of two realities: one, everyday life; the other, what lies behind it. To find out if his reality is a physical or mental construct, Mr. Anderson will have to choose to follow the white rabbit once more.",
-  poster: "https://via.placeholder.com/1920x1080?text=The+Matrix+Resurrections",
+  poster: "https://dummyimage.com/1920x1080",
   releaseDate: "2021-12-22",
   categories: ["Action", "Sci-Fi"]
 };
@@ -16,7 +16,7 @@ const featuredMovies = [
     id: 1,
     title: "Dune",
     description: "Feature adaptation of Frank Herbert's science fiction novel about the son of a noble family trying to avenge his father's death while saving a spice planet that he is entrusted to protect.",
-    poster: "https://via.placeholder.com/300x450?text=Dune",
+    poster: "https://dummyimage.com/300x450",
     price_rent: 4.99,
     price_buy: 14.99
   },
@@ -24,7 +24,7 @@ const featuredMovies = [
     id: 2,
     title: "No Time to Die",
     description: "James Bond has left active service. His peace is short-lived when Felix Leiter, an old friend from the CIA, turns up asking for help.",
-    poster: "https://via.placeholder.com/300x450?text=No+Time+To+Die",
+    poster: "https://dummyimage.com/300x450",
     price_rent: 5.99,
     price_buy: 19.99
   },
@@ -32,7 +32,7 @@ const featuredMovies = [
     id: 3,
     title: "Spider-Man: No Way Home",
     description: "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.",
-    poster: "https://via.placeholder.com/300x450?text=Spider-Man",
+    poster: "https://dummyimage.com/300x450",
     price_rent: 5.99,
     price_buy: 19.99
   },
@@ -40,7 +40,7 @@ const featuredMovies = [
     id: 4,
     title: "The Batman",
     description: "When the Riddler, a sadistic serial killer, begins murdering key political figures in Gotham, Batman is forced to investigate the city's hidden corruption.",
-    poster: "https://via.placeholder.com/300x450?text=The+Batman",
+    poster: "https://dummyimage.com/300x450",
     price_rent: 6.99,
     price_buy: 24.99
   }
@@ -51,28 +51,28 @@ const featuredTVShows = [
     id: 1,
     title: "Stranger Things",
     description: "When a young boy disappears, his mother, a police chief, and his friends must confront terrifying supernatural forces in order to get him back.",
-    poster: "https://via.placeholder.com/300x450?text=Stranger+Things",
+    poster: "https://dummyimage.com/300x450",
     seasons: 4
   },
   {
     id: 2,
     title: "The Witcher",
     description: "Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where people often prove more wicked than beasts.",
-    poster: "https://via.placeholder.com/300x450?text=The+Witcher",
+    poster: "https://dummyimage.com/300x450",
     seasons: 2
   },
   {
     id: 3,
     title: "Squid Game",
     description: "Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits with deadly high stakes.",
-    poster: "https://via.placeholder.com/300x450?text=Squid+Game",
+    poster: "https://dummyimage.com/300x450",
     seasons: 1
   },
   {
     id: 4,
     title: "Money Heist",
     description: "An unusual group of robbers attempt to carry out the most perfect robbery in Spanish history - stealing 2.4 billion euros from the Royal Mint of Spain.",
-    poster: "https://via.placeholder.com/300x450?text=Money+Heist",
+    poster: "https://dummyimage.com/300x450",
     seasons: 5
   }
 ];

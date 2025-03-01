@@ -22,7 +22,7 @@ const TVSeries = () => {
         id: 1, 
         title: 'Breaking Bad', 
         years: '2008-2013', 
-        poster: 'https://via.placeholder.com/300x450?text=Breaking+Bad',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.5,
         genre: 'Crime, Drama, Thriller',
         status: 'ended'
@@ -31,7 +31,7 @@ const TVSeries = () => {
         id: 2, 
         title: 'Game of Thrones', 
         years: '2011-2019', 
-        poster: 'https://via.placeholder.com/300x450?text=Game+of+Thrones',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.2,
         genre: 'Action, Adventure, Drama',
         status: 'ended'
@@ -40,7 +40,7 @@ const TVSeries = () => {
         id: 3, 
         title: 'The Wire', 
         years: '2002-2008', 
-        poster: 'https://via.placeholder.com/300x450?text=The+Wire',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.3,
         genre: 'Crime, Drama, Thriller',
         status: 'ended'
@@ -49,7 +49,7 @@ const TVSeries = () => {
         id: 4, 
         title: 'Stranger Things', 
         years: '2016-Present', 
-        poster: 'https://via.placeholder.com/300x450?text=Stranger+Things',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.7,
         genre: 'Drama, Fantasy, Horror',
         status: 'ongoing'
@@ -58,7 +58,7 @@ const TVSeries = () => {
         id: 5, 
         title: 'The Sopranos', 
         years: '1999-2007', 
-        poster: 'https://via.placeholder.com/300x450?text=The+Sopranos',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.2,
         genre: 'Crime, Drama',
         status: 'ended'
@@ -67,7 +67,7 @@ const TVSeries = () => {
         id: 6, 
         title: 'Chernobyl', 
         years: '2019', 
-        poster: 'https://via.placeholder.com/300x450?text=Chernobyl',
+        poster: 'https://dummyimage.com/300x450',
         rating: 9.4,
         genre: 'Drama, History, Thriller',
         status: 'ended'
@@ -76,7 +76,7 @@ const TVSeries = () => {
         id: 7, 
         title: 'The Mandalorian', 
         years: '2019-Present', 
-        poster: 'https://via.placeholder.com/300x450?text=Mandalorian',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.8,
         genre: 'Action, Adventure, Fantasy',
         status: 'ongoing'
@@ -85,7 +85,7 @@ const TVSeries = () => {
         id: 8, 
         title: 'The Boys', 
         years: '2019-Present', 
-        poster: 'https://via.placeholder.com/300x450?text=The+Boys',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.7,
         genre: 'Action, Comedy, Crime',
         status: 'ongoing'
@@ -94,7 +94,7 @@ const TVSeries = () => {
         id: 9, 
         title: 'Dark', 
         years: '2017-2020', 
-        poster: 'https://via.placeholder.com/300x450?text=Dark',
+        poster: 'https://dummyimage.com/300x450',
         rating: 8.7,
         genre: 'Drama, Mystery, Sci-Fi',
         status: 'ended'
