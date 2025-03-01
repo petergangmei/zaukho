@@ -1,0 +1,48 @@
+.not-found-page {
+  padding: 100px 0;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  
+  .error-code {
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .error-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .error-message {
+    font-size: 1.2rem;
+    color: #aaa;
+    max-width: 600px;
+    margin: 0 auto 30px;
+  }
+  
+  .btn-lg {
+    padding: 0.8rem 2rem;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 767px) {
+    padding: 60px 0;
+    
+    .error-code {
+      font-size: 6rem;
+    }
+    
+    .error-title {
+      font-size: 2rem;
+    }
+    
+    .error-message {
+      font-size: 1rem;
+    }
+  }
+} 
