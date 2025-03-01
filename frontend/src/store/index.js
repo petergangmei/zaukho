@@ -2,22 +2,26 @@ import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import thunk from 'redux-thunk';
+import { thunk } from 'redux-thunk';
 
 // Import reducers
 import authReducer from './slices/authSlice';
-import contentReducer from './slices/contentSlice';
 import categoriesReducer from './slices/categoriesSlice';
 import libraryReducer from './slices/librarySlice';
+import moviesReducer from './slices/moviesSlice';
+import tvSeriesReducer from './slices/tvSeriesSlice';
+import contentReducer from './slices/contentSlice';
 import searchReducer from './slices/searchSlice';
 import watchlistReducer from './slices/watchlistSlice';
 
 // Combine reducers
 const rootReducer = combineReducers({
   auth: authReducer,
-  content: contentReducer,
   categories: categoriesReducer,
   library: libraryReducer,
+  movies: moviesReducer,
+  tvSeries: tvSeriesReducer,
+  content: contentReducer,
   search: searchReducer,
   watchlist: watchlistReducer,
 });

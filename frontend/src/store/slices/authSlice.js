@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 // Initial state
 const initialState = {
   user: null,
-  token: localStorage.getItem('authToken') || null,
-  isAuthenticated: !!localStorage.getItem('authToken'),
+  token: localStorage.getItem('token') || null,
+  isAuthenticated: !!localStorage.getItem('token'),
   loading: false,
   error: null,
 };
@@ -20,7 +20,7 @@ export const login = createAsyncThunk(
       const { token, user } = response.data;
       
       // Store token in localStorage
-      localStorage.setItem('authToken', token);
+      localStorage.setItem('token', token);
       
       return { token, user };
     } catch (error) {
@@ -39,7 +39,7 @@ export const register = createAsyncThunk(
       const { token, user } = response.data;
       
       // Store token in localStorage
-      localStorage.setItem('authToken', token);
+      localStorage.setItem('token', token);
       
       return { token, user };
     } catch (error) {
@@ -54,14 +54,17 @@ export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      await api.auth.logout();
-      
       // Remove token from localStorage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      
+      // Call logout API (optional, depends on backend implementation)
+      await api.auth.logout();
       
       return null;
     } catch (error) {
+      // Even if API call fails, we still want to remove token and log out user
+      localStorage.removeItem('token');
+      
       return rejectWithValue(
         error.response?.data?.detail || 'Logout failed. Please try again.'
       );
@@ -76,6 +79,12 @@ export const getCurrentUser = createAsyncThunk(
       const response = await api.auth.getUser();
       return response.data;
     } catch (error) {
+      // Don't show error toast for 401 errors when checking current user
+      if (error.response && error.response.status === 401) {
+        // Clear token if it's invalid
+        localStorage.removeItem('token');
+        return rejectWithValue('Not authenticated');
+      }
       return rejectWithValue(
         error.response?.data?.detail || 'Failed to fetch user data.'
       );
@@ -143,6 +152,9 @@ const authSlice = createSlice({
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
+        state.isAuthenticated = false;
+        state.token = null;
+        state.user = null;
         state.error = action.payload;
         toast.error(action.payload);
       })
@@ -155,14 +167,19 @@ const authSlice = createSlice({
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
-        state.isAuthenticated = false;
-        state.token = null;
-        state.user = null;
-        localStorage.removeItem('authToken');
+        if (action.payload === 'Not authenticated') {
+          // Silent failure for auth check
+          state.isAuthenticated = false;
+          state.token = null;
+          state.user = null;
+        } else {
+          state.error = action.payload;
+          toast.error(action.payload);
+        }
       });
   },
 });

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
+import { getCurrentUser } from './store/slices/authSlice';
 
 // Import components
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Import pages
 import Home from './pages/Home';
@@ -42,32 +45,50 @@ import RefundPolicy from './pages/policies/RefundPolicy';
 import CancellationPolicy from './pages/policies/CancellationPolicy';
 
 function App() {
+  const dispatch = useDispatch();
+
+  // Check authentication status when app loads
+  useEffect(() => {
+    // Check if user is authenticated
+    if (localStorage.getItem('token')) {
+      dispatch(getCurrentUser());
+    }
+  }, [dispatch]);
+
   return (
     <div className="app">
       <Header />
       <main className="main-content">
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/browse" element={<Browse />} />
-          <Route path="/movies" element={<Movies />} />
-          <Route path="/movies/:id" element={<MovieDetail />} />
-          <Route path="/tv-series" element={<TVSeries />} />
-          <Route path="/tv-series/:id" element={<TVSeriesDetail />} />
-          <Route path="/tv-series/:seriesId/season/:seasonNumber/episode/:episodeNumber" element={<EpisodeDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/my-library" element={<MyLibrary />} />
-          <Route path="/transaction-history" element={<TransactionHistory />} />
-          <Route path="/profile-settings" element={<ProfileSettings />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<ContactUs />} />
+          
           {/* Policy routes */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/cancellation-policy" element={<CancellationPolicy />} />
-          <Route path="/contact" element={<ContactUs />} />
+          
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/browse" element={<Browse />} />
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/movies/:id" element={<MovieDetail />} />
+            <Route path="/tv-series" element={<TVSeries />} />
+            <Route path="/tv-series/:id" element={<TVSeriesDetail />} />
+            <Route path="/tv-series/:seriesId/season/:seasonNumber/episode/:episodeNumber" element={<EpisodeDetail />} />
+            <Route path="/my-library" element={<MyLibrary />} />
+            <Route path="/transaction-history" element={<TransactionHistory />} />
+            <Route path="/profile-settings" element={<ProfileSettings />} />
+          </Route>
+          
+          {/* 404 route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -42,19 +42,22 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Clear local storage and redirect to login
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
 );
 
 // API endpoints
-const endpoints = {
+const api = {
   // Auth endpoints
   auth: {
     login: (credentials) => apiClient.post('/auth/login/', credentials),
     register: (userData) => apiClient.post('/auth/register/', userData),
     logout: () => apiClient.post('/auth/logout/'),
+    getUser: () => apiClient.get('/auth/user/'),
     refreshToken: () => apiClient.post('/auth/token/refresh/'),
     resetPassword: (email) => apiClient.post('/auth/password-reset/', { email }),
     confirmResetPassword: (data) => apiClient.post('/auth/password-reset/confirm/', data),
@@ -127,4 +130,4 @@ const endpoints = {
   },
 };
 
-export default endpoints; 
+export default api; 
