@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Header.scss';
 
 const Header = () => {
   // State to track if user is logged in (for demo purposes)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // State to track if dropdown is open
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  // Ref for dropdown menu
+  const dropdownRef = useRef(null);
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   
   return (
     <header className="header">
@@ -47,17 +65,38 @@ const Header = () => {
             
             <div className="d-flex">
               {isLoggedIn ? (
-                <>
-                  <NavLink className="nav-link me-3" to="/my-library">
-                    <i className="fas fa-film me-1"></i> My Library
-                  </NavLink>
+                <div className="user-dropdown" ref={dropdownRef}>
                   <button 
-                    className="btn btn-outline-light" 
-                    onClick={() => setIsLoggedIn(false)}
+                    className="dropdown-toggle d-flex align-items-center"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
-                    Logout
+                    <div className="avatar-circle me-2">
+                      <span className="initials">JD</span>
+                    </div>
+                    <span className="d-none d-md-inline">John Doe</span>
                   </button>
-                </>
+                  
+                  {dropdownOpen && (
+                    <div className="dropdown-menu">
+                      <NavLink className="dropdown-item" to="/my-library">
+                        <i className="fas fa-film me-2"></i> My Library
+                      </NavLink>
+                      <NavLink className="dropdown-item" to="/profile-settings">
+                        <i className="fas fa-user-cog me-2"></i> Profile Settings
+                      </NavLink>
+                      <NavLink className="dropdown-item" to="/transaction-history">
+                        <i className="fas fa-history me-2"></i> Transaction History
+                      </NavLink>
+                      <div className="dropdown-divider"></div>
+                      <button 
+                        className="dropdown-item text-danger" 
+                        onClick={() => setIsLoggedIn(false)}
+                      >
+                        <i className="fas fa-sign-out-alt me-2"></i> Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <>
                   <NavLink className="btn btn-outline-light me-2" to="/login">

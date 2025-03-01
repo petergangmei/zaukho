@@ -1,5 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
 
 // Import components
@@ -27,6 +29,8 @@ import Terms from './pages/Terms';
 import RefundPolicy from './pages/RefundPolicy';
 import CancellationPolicy from './pages/CancellationPolicy';
 import ContactUs from './pages/ContactUs';
+import TransactionHistory from './pages/TransactionHistory';
+import ProfileSettings from './pages/ProfileSettings';
 
 function App() {
   return (
@@ -44,6 +48,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/my-library" element={<MyLibrary />} />
+          <Route path="/transaction-history" element={<TransactionHistory />} />
+          <Route path="/profile-settings" element={<ProfileSettings />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
           {/* New routes */}
@@ -56,6 +62,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <ToastContainer position="bottom-right" autoClose={5000} />
     </div>
   );
 }
