@@ -136,80 +136,104 @@ const authSlice = createSlice({
     builder
       // Login
       .addCase(login.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        if (state) {
+          state.loading = true;
+          state.error = null;
+        }
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-        state.isAuthenticated = true;
-        state.token = action.payload.token;
-        state.user = action.payload.user;
-        toast.success('Login successful! Welcome back.');
+        if (state) {
+          state.loading = false;
+          state.isAuthenticated = true;
+          state.token = action.payload.token;
+          state.user = action.payload.user;
+          toast.success('Login successful! Welcome back.');
+        }
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(action.payload);
+        if (state) {
+          state.loading = false;
+          state.error = action.payload;
+          toast.error(action.payload);
+        }
       })
       
       // Register
       .addCase(register.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        if (state) {
+          state.loading = true;
+          state.error = null;
+        }
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.loading = false;
-        state.isAuthenticated = true;
-        state.token = action.payload.token;
-        state.user = action.payload.user;
-        toast.success('Registration successful! Welcome to ZAUKHO.');
+        if (state) {
+          state.loading = false;
+          state.isAuthenticated = true;
+          state.token = action.payload.token;
+          state.user = action.payload.user;
+          toast.success('Registration successful! Welcome to ZAUKHO.');
+        }
       })
       .addCase(register.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        toast.error(action.payload);
+        if (state) {
+          state.loading = false;
+          state.error = action.payload;
+          toast.error(action.payload);
+        }
       })
       
       // Logout
       .addCase(logout.pending, (state) => {
-        state.loading = true;
+        if (state) {
+          state.loading = true;
+        }
       })
       .addCase(logout.fulfilled, (state) => {
-        state.loading = false;
-        state.isAuthenticated = false;
-        state.token = null;
-        state.user = null;
-        toast.success('You have been logged out successfully.');
+        if (state) {
+          state.loading = false;
+          state.isAuthenticated = false;
+          state.token = null;
+          state.user = null;
+          toast.success('You have been logged out successfully.');
+        }
       })
       .addCase(logout.rejected, (state, action) => {
-        state.loading = false;
-        state.isAuthenticated = false;
-        state.token = null;
-        state.user = null;
-        state.error = action.payload;
-        toast.error(action.payload);
+        if (state) {
+          state.loading = false;
+          state.isAuthenticated = false;
+          state.token = null;
+          state.user = null;
+          state.error = action.payload;
+          toast.error(action.payload);
+        }
       })
       
       // Get current user
       .addCase(getCurrentUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        if (state) {
+          state.loading = true;
+          state.error = null;
+        }
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
+        if (state) {
+          state.loading = false;
+          state.user = action.payload;
+          state.isAuthenticated = true;
+        }
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
-        state.loading = false;
-        if (action.payload === 'Not authenticated') {
-          // Silent failure for auth check
-          state.isAuthenticated = false;
-          state.token = null;
-          state.user = null;
-        } else {
-          state.error = action.payload;
-          toast.error(action.payload);
+        if (state) {
+          state.loading = false;
+          if (action.payload === 'Not authenticated') {
+            // Silent failure for auth check
+            state.isAuthenticated = false;
+            state.token = null;
+            state.user = null;
+          } else {
+            state.error = action.payload;
+            toast.error(action.payload);
+          }
         }
       });
   },

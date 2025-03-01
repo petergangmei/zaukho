@@ -78,11 +78,16 @@ const Login = () => {
     
     if (validateForm()) {
       try {
-        await dispatch(login(formData)).unwrap();
+        const result = await dispatch(login(formData)).unwrap();
         // Success toast is handled in the auth slice
+        console.log('Login successful:', result);
       } catch (err) {
         // Error toast is handled in the auth slice
         console.error('Login failed:', err);
+        // If there's an error that wasn't handled by the slice
+        if (!err.message && !err.response) {
+          console.error('Unexpected error during login');
+        }
       }
     }
   };
@@ -90,14 +95,19 @@ const Login = () => {
   // Handle demo login
   const handleDemoLogin = async () => {
     try {
-      await dispatch(login({
+      const result = await dispatch(login({
         email: 'demo@example.com',
         password: 'password123'
       })).unwrap();
       // Success toast is handled in the auth slice
+      console.log('Demo login successful:', result);
     } catch (err) {
       // Error toast is handled in the auth slice
       console.error('Demo login failed:', err);
+      // If there's an error that wasn't handled by the slice
+      if (!err.message && !err.response) {
+        console.error('Unexpected error during demo login');
+      }
     }
   };
 

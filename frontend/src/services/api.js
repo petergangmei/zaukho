@@ -133,12 +133,54 @@ apiClient.interceptors.response.use(
 const api = {
   // Auth endpoints
   auth: {
-    login: (credentials) => apiClient.post('/auth/login/', credentials),
-    register: (userData) => apiClient.post('/auth/register/', userData),
-    logout: (data) => apiClient.post('/auth/logout/', data),
-    getUser: () => apiClient.get('/auth/user/'),
-    refreshToken: (refreshToken) => apiClient.post('/auth/token/refresh/', { refresh: refreshToken }),
-    verifyToken: (token) => apiClient.post('/auth/token/verify/', { token }),
+    login: (credentials) => {
+      try {
+        return apiClient.post('/auth/login/', credentials);
+      } catch (error) {
+        console.error('API login error:', error);
+        throw error;
+      }
+    },
+    register: (userData) => {
+      try {
+        return apiClient.post('/auth/register/', userData);
+      } catch (error) {
+        console.error('API register error:', error);
+        throw error;
+      }
+    },
+    logout: (data) => {
+      try {
+        return apiClient.post('/auth/logout/', data);
+      } catch (error) {
+        console.error('API logout error:', error);
+        throw error;
+      }
+    },
+    getUser: () => {
+      try {
+        return apiClient.get('/auth/user/');
+      } catch (error) {
+        console.error('API getUser error:', error);
+        throw error;
+      }
+    },
+    refreshToken: (refreshToken) => {
+      try {
+        return apiClient.post('/auth/token/refresh/', { refresh: refreshToken });
+      } catch (error) {
+        console.error('API refreshToken error:', error);
+        throw error;
+      }
+    },
+    verifyToken: (token) => {
+      try {
+        return apiClient.post('/auth/token/verify/', { token });
+      } catch (error) {
+        console.error('API verifyToken error:', error);
+        throw error;
+      }
+    },
     resetPassword: (email) => apiClient.post('/auth/password-reset/', { email }),
     confirmResetPassword: (data) => apiClient.post('/auth/password-reset/confirm/', data),
   },

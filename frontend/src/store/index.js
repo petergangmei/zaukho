@@ -31,6 +31,33 @@ const persistConfig = {
   key: 'root',
   storage,
   whitelist: ['auth', 'watchlist'], // Persist auth and watchlist states
+  // Add a transform to ensure the state is valid before rehydrating
+  transforms: [
+    {
+      in: (state, key) => {
+        // Make sure the state is valid before persisting
+        if (key === 'auth' && state) {
+          return {
+            ...state,
+            loading: false, // Reset loading state on persist
+            error: null // Reset error state on persist
+          };
+        }
+        return state;
+      },
+      out: (state, key) => {
+        // Make sure the state is valid when rehydrating
+        if (key === 'auth' && state) {
+          return {
+            ...state,
+            loading: false, // Ensure loading is false when rehydrating
+            error: null // Ensure error is null when rehydrating
+          };
+        }
+        return state;
+      }
+    }
+  ]
 };
 
 // Create persisted reducer

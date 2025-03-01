@@ -105,11 +105,16 @@ const Register = () => {
           }
         }
         
-        await dispatch(register(formData)).unwrap();
+        const result = await dispatch(register(formData)).unwrap();
         // Success toast is handled in the auth slice
+        console.log('Registration successful:', result);
       } catch (err) {
         // Error toast is handled in the auth slice
         console.error('Registration failed:', err);
+        // If there's an error that wasn't handled by the slice
+        if (!err.message && !err.response) {
+          console.error('Unexpected error during registration');
+        }
       }
     }
   };
