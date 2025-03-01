@@ -1,0 +1,52 @@
+# Environment folders
+env/
+venv/
+.env/
+.venv/
+ENV/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Local configuration
+.env
+.env.local
+*.local.yml
+*.local.yaml
+
+# Database files
+*.sqlite3
+*.db
+
+# Compiled Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node
+node_modules/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache/
+coverage/
+
+# Temporary files
+tmp/
+temp/ 
