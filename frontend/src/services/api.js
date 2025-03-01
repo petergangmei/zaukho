@@ -22,6 +22,24 @@ const apiClient = axios.create({
   },
 });
 
+// Flag to prevent multiple refresh token requests
+let isRefreshing = false;
+// Queue of failed requests to retry after token refresh
+let failedQueue = [];
+
+// Process the queue of failed requests
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
 // Request interceptor for adding auth token
 apiClient.interceptors.request.use(
   (config) => {
@@ -34,18 +52,79 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for handling errors
+// Response interceptor for handling errors and token refresh
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    // Handle 401 Unauthorized errors (token expired)
-    if (error.response && error.response.status === 401) {
-      // Clear local storage and redirect to login
-      localStorage.removeItem('token');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // If the error is 401 and we haven't tried to refresh the token yet
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // If we're already refreshing, add this request to the queue
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(token => {
+            originalRequest.headers['Authorization'] = `Bearer ${token}`;
+            return apiClient(originalRequest);
+          })
+          .catch(err => Promise.reject(err));
+      }
+      
+      originalRequest._retry = true;
+      isRefreshing = true;
+      
+      const refreshToken = localStorage.getItem('refresh_token');
+      
+      if (!refreshToken) {
+        // No refresh token, clear auth and redirect to login
+        localStorage.removeItem('token');
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+      
+      try {
+        // Try to refresh the token
+        const response = await axios.post(`${API_URLS[environment]}/auth/token/refresh/`, {
+          refresh: refreshToken
+        });
+        
+        const { token } = response.data;
+        
+        // Update token in localStorage
+        localStorage.setItem('token', token);
+        
+        // Update Authorization header for the original request
+        originalRequest.headers['Authorization'] = `Bearer ${token}`;
+        
+        // Process the queue with the new token
+        processQueue(null, token);
+        
+        isRefreshing = false;
+        
+        // Retry the original request
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        // Refresh token is invalid, clear auth and redirect to login
+        localStorage.removeItem('token');
+        localStorage.removeItem('refresh_token');
+        
+        // Process the queue with an error
+        processQueue(refreshError, null);
+        
+        isRefreshing = false;
+        
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+        
+        return Promise.reject(refreshError);
       }
     }
+    
     return Promise.reject(error);
   }
 );
@@ -56,9 +135,10 @@ const api = {
   auth: {
     login: (credentials) => apiClient.post('/auth/login/', credentials),
     register: (userData) => apiClient.post('/auth/register/', userData),
-    logout: () => apiClient.post('/auth/logout/'),
+    logout: (data) => apiClient.post('/auth/logout/', data),
     getUser: () => apiClient.get('/auth/user/'),
-    refreshToken: () => apiClient.post('/auth/token/refresh/'),
+    refreshToken: (refreshToken) => apiClient.post('/auth/token/refresh/', { refresh: refreshToken }),
+    verifyToken: (token) => apiClient.post('/auth/token/verify/', { token }),
     resetPassword: (email) => apiClient.post('/auth/password-reset/', { email }),
     confirmResetPassword: (data) => apiClient.post('/auth/password-reset/confirm/', data),
   },

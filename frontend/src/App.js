@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
-import { getCurrentUser } from './store/slices/authSlice';
+import { getCurrentUser, selectAuth } from './store/slices/authSlice';
 
 // Import components
 import Header from './components/Header';
@@ -46,14 +46,15 @@ import CancellationPolicy from './pages/policies/CancellationPolicy';
 
 function App() {
   const dispatch = useDispatch();
+  const auth = useSelector(selectAuth);
 
   // Check authentication status when app loads
   useEffect(() => {
     // Check if user is authenticated
-    if (localStorage.getItem('token')) {
+    if (auth && auth.token) {
       dispatch(getCurrentUser());
     }
-  }, [dispatch]);
+  }, [dispatch, auth]);
 
   return (
     <div className="app">

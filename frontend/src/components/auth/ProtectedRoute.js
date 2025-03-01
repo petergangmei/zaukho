@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { getCurrentUser } from '../../store/slices/authSlice';
+import { getCurrentUser, selectAuth } from '../../store/slices/authSlice';
 import { LoadingSpinner } from '../common';
 
 /**
@@ -11,7 +11,9 @@ import { LoadingSpinner } from '../common';
  */
 const ProtectedRoute = () => {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const { isAuthenticated, token } = useSelector((state) => state.auth);
+  // Use the selector function to safely access the auth state
+  const auth = useSelector(selectAuth) || { isAuthenticated: false, token: null };
+  const { isAuthenticated, token } = auth;
   const dispatch = useDispatch();
   const location = useLocation();
 

@@ -12,11 +12,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
+// Create loading component for PersistGate
+const LoadingComponent = () => (
+  <div className="flex items-center justify-center h-screen bg-black">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+  </div>
+);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={<LoadingComponent />} persistor={persistor}>
         <BrowserRouter>
           <App />
         </BrowserRouter>

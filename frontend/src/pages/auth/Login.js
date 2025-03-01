@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormInput, Button } from '../../components/common';
+import { login, selectAuth, clearError } from '../../store/slices/authSlice';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { isAuthenticated, loading, error } = useSelector(selectAuth) || { loading: false };
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState({});
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/browse';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
+
+  // Clear errors when component unmounts
+  useEffect(() => {
+    return () => {
+      if (dispatch) {
+        dispatch(clearError());
+      }
+    };
+  }, [dispatch]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -22,9 +42,9 @@ const Login = () => {
     });
     
     // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors({
-        ...errors,
+    if (validationErrors[name]) {
+      setValidationErrors({
+        ...validationErrors,
         [name]: ''
       });
     }
@@ -48,56 +68,37 @@ const Login = () => {
       newErrors.password = 'Password must be at least 6 characters';
     }
     
-    setErrors(newErrors);
+    setValidationErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
-      setIsLoading(true);
-      setError('');
-      
-      // Simulate API call
-      setTimeout(() => {
-        setIsLoading(false);
-        
-        // Store user data in localStorage (in a real app, this would be handled by a backend)
-        localStorage.setItem('user', JSON.stringify({
-          id: '1',
-          name: 'Test User',
-          email: formData.email,
-          isAuthenticated: true
-        }));
-        
-        toast.success('Login successful! Welcome back to ZAUKHO.');
-        navigate('/browse');
-      }, 1500);
+      try {
+        await dispatch(login(formData)).unwrap();
+        // Success toast is handled in the auth slice
+      } catch (err) {
+        // Error toast is handled in the auth slice
+        console.error('Login failed:', err);
+      }
     }
   };
 
   // Handle demo login
-  const handleDemoLogin = () => {
-    setIsLoading(true);
-    setError('');
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify({
-        id: 'demo-user',
-        name: 'Demo User',
+  const handleDemoLogin = async () => {
+    try {
+      await dispatch(login({
         email: 'demo@example.com',
-        isAuthenticated: true
-      }));
-      
-      toast.success('Demo login successful! Welcome to ZAUKHO.');
-      navigate('/browse');
-    }, 1000);
+        password: 'password123'
+      })).unwrap();
+      // Success toast is handled in the auth slice
+    } catch (err) {
+      // Error toast is handled in the auth slice
+      console.error('Demo login failed:', err);
+    }
   };
 
   return (
@@ -137,7 +138,7 @@ const Login = () => {
               label="Email Address"
               value={formData.email}
               onChange={handleChange}
-              error={errors.email}
+              error={validationErrors.email}
               required
             />
             
@@ -148,7 +149,7 @@ const Login = () => {
               label="Password"
               value={formData.password}
               onChange={handleChange}
-              error={errors.password}
+              error={validationErrors.password}
               required
             />
             
@@ -177,7 +178,7 @@ const Login = () => {
                 type="submit"
                 variant="primary"
                 fullWidth
-                isLoading={isLoading}
+                isLoading={loading}
               >
                 Sign In
               </Button>
@@ -197,7 +198,7 @@ const Login = () => {
               variant="secondary"
               fullWidth
               onClick={handleDemoLogin}
-              disabled={isLoading}
+              disabled={loading}
             >
               Try Demo Account
             </Button>

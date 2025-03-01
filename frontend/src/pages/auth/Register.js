@@ -1,18 +1,41 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormInput, Button } from '../../components/common';
+import { register, selectAuth, clearError } from '../../store/slices/authSlice';
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { isAuthenticated, loading, error } = useSelector(selectAuth) || { loading: false };
+  
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    password_confirm: '',
+    first_name: '',
+    last_name: ''
   });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/browse';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
+
+  // Clear errors when component unmounts
+  useEffect(() => {
+    return () => {
+      if (dispatch) {
+        dispatch(clearError());
+      }
+    };
+  }, [dispatch]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -23,9 +46,9 @@ const Register = () => {
     });
     
     // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors({
-        ...errors,
+    if (validationErrors[name]) {
+      setValidationErrors({
+        ...validationErrors,
         [name]: ''
       });
     }
@@ -35,9 +58,9 @@ const Register = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    // Username validation
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
     }
     
     // Email validation
@@ -55,38 +78,39 @@ const Register = () => {
     }
     
     // Confirm password validation
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.confirmPassword !== formData.password) {
-      newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.password_confirm) {
+      newErrors.password_confirm = 'Please confirm your password';
+    } else if (formData.password_confirm !== formData.password) {
+      newErrors.password_confirm = 'Passwords do not match';
     }
     
-    setErrors(newErrors);
+    setValidationErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
-      setIsSubmitting(true);
-      
-      // Simulate API call
-      setTimeout(() => {
-        setIsSubmitting(false);
+      try {
+        // Split name into first_name and last_name if they're not provided
+        if (!formData.first_name && !formData.last_name && formData.username) {
+          const nameParts = formData.username.split(' ');
+          if (nameParts.length > 1) {
+            formData.first_name = nameParts[0];
+            formData.last_name = nameParts.slice(1).join(' ');
+          } else {
+            formData.first_name = formData.username;
+          }
+        }
         
-        // Store user data in localStorage (in a real app, this would be handled by a backend)
-        localStorage.setItem('user', JSON.stringify({
-          id: Date.now().toString(),
-          name: formData.name,
-          email: formData.email,
-          isAuthenticated: true
-        }));
-        
-        toast.success('Registration successful! Welcome to ZAUKHO.');
-        navigate('/browse');
-      }, 1500);
+        await dispatch(register(formData)).unwrap();
+        // Success toast is handled in the auth slice
+      } catch (err) {
+        // Error toast is handled in the auth slice
+        console.error('Registration failed:', err);
+      }
     }
   };
 
@@ -111,18 +135,47 @@ const Register = () => {
             <p className="mt-2 text-gray-400">Join ZAUKHO for unlimited entertainment</p>
           </div>
           
+          {/* Error message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-900 bg-opacity-50 border border-red-800 rounded text-red-200 text-sm">
+              {error}
+            </div>
+          )}
+          
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <FormInput
-              id="name"
-              name="name"
+              id="username"
+              name="username"
               type="text"
-              label="Full Name"
-              value={formData.name}
+              label="Username"
+              value={formData.username}
               onChange={handleChange}
-              error={errors.name}
+              error={validationErrors.username}
               required
             />
+            
+            <div className="grid grid-cols-2 gap-4">
+              <FormInput
+                id="first_name"
+                name="first_name"
+                type="text"
+                label="First Name"
+                value={formData.first_name}
+                onChange={handleChange}
+                error={validationErrors.first_name}
+              />
+              
+              <FormInput
+                id="last_name"
+                name="last_name"
+                type="text"
+                label="Last Name"
+                value={formData.last_name}
+                onChange={handleChange}
+                error={validationErrors.last_name}
+              />
+            </div>
             
             <FormInput
               id="email"
@@ -131,7 +184,7 @@ const Register = () => {
               label="Email Address"
               value={formData.email}
               onChange={handleChange}
-              error={errors.email}
+              error={validationErrors.email}
               required
             />
             
@@ -142,18 +195,18 @@ const Register = () => {
               label="Password"
               value={formData.password}
               onChange={handleChange}
-              error={errors.password}
+              error={validationErrors.password}
               required
             />
             
             <FormInput
-              id="confirmPassword"
-              name="confirmPassword"
+              id="password_confirm"
+              name="password_confirm"
               type="password"
               label="Confirm Password"
-              value={formData.confirmPassword}
+              value={formData.password_confirm}
               onChange={handleChange}
-              error={errors.confirmPassword}
+              error={validationErrors.password_confirm}
               required
             />
             
@@ -162,7 +215,7 @@ const Register = () => {
                 type="submit"
                 variant="primary"
                 fullWidth
-                isLoading={isSubmitting}
+                isLoading={loading}
               >
                 Sign Up
               </Button>
