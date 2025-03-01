@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 
 // Import pages
 import Home from './pages/Home';
+import Browse from './pages/Browse';
 import Movies from './pages/Movies';
 import MovieDetail from './pages/MovieDetail';
 import TVSeries from './pages/TVSeries';
@@ -39,6 +40,7 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/browse" element={<Browse />} />
           <Route path="/movies" element={<Movies />} />
           <Route path="/movies/:id" element={<MovieDetail />} />
           <Route path="/tv-series" element={<TVSeries />} />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,6 +10,8 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   // Handle input changes
   const handleChange = (e) => {
@@ -51,33 +54,32 @@ const Login = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     
     // Validate form
     const newErrors = validateForm();
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setIsLoading(false);
       return;
     }
     
     // Simulate API call
-    setIsSubmitting(true);
-    
-    // Mock login (will implement actual API call later)
     setTimeout(() => {
-      setIsSubmitting(false);
+      setIsLoading(false);
       
-      // Store token to localStorage (mock authentication)
-      localStorage.setItem('authToken', 'mock-jwt-token');
-      localStorage.setItem('user', JSON.stringify({
-        id: 1,
-        name: 'Test User',
-        email: formData.email
-      }));
-      
-      // Redirect to home page after successful login
-      navigate('/');
-    }, 1000);
+      // Check if credentials are valid (this is just a mock)
+      if (formData.email && formData.password) {
+        // Success - redirect to browse page
+        navigate('/browse');
+        toast.success('Login successful!');
+      } else {
+        // Error
+        setError('Invalid email or password');
+        toast.error('Login failed. Please check your credentials.');
+      }
+    }, 1500);
   };
 
   return (
@@ -136,13 +138,13 @@ const Login = () => {
             <button 
               type="submit" 
               className={`w-full py-2 px-4 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                isSubmitting 
+                isLoading 
                   ? 'bg-red-400 cursor-not-allowed dark:bg-red-500' 
                   : 'bg-red-600 hover:bg-red-700 text-white dark:bg-red-500 dark:hover:bg-red-600'
               }`}
-              disabled={isSubmitting}
+              disabled={isLoading}
             >
-              {isSubmitting ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
           </form>
           

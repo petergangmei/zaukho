@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -89,8 +90,9 @@ const Register = () => {
         email: formData.email
       }));
       
-      // Redirect to home page after successful registration
-      navigate('/');
+      // Redirect to browse page after successful registration
+      navigate('/browse');
+      toast.success('Account created successfully!');
     }, 1000);
   };
 
@@ -193,8 +195,8 @@ const Register = () => {
               type="submit" 
               className={`w-full py-3 px-4 mt-6 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                 isSubmitting 
-                  ? 'bg-blue-400 cursor-not-allowed dark:bg-blue-500' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600'
+                  ? 'bg-red-400 cursor-not-allowed dark:bg-red-500' 
+                  : 'bg-red-600 hover:bg-red-700 text-white dark:bg-red-500 dark:hover:bg-red-600'
               }`}
               disabled={isSubmitting}
             >

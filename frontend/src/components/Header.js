@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 // Remove SCSS import since we'll use Tailwind CSS
 // import './Header.scss';
 
 const Header = () => {
-  // State to track if user is logged in (for demo purposes)
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const navigate = useNavigate();
+  // State to track if user is logged in (check localStorage)
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('authToken'));
   // State to track if dropdown is open
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // State to track if mobile menu is open
@@ -47,10 +49,44 @@ const Header = () => {
     };
   }, []);
 
+  // Check auth status on mount and when localStorage changes
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      setIsLoggedIn(!!localStorage.getItem('authToken'));
+    };
+    
+    // Check on mount
+    checkAuthStatus();
+    
+    // Listen for storage events (in case another tab logs out)
+    window.addEventListener('storage', checkAuthStatus);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuthStatus);
+    };
+  }, []);
+  
+  // Handle logout function
+  const handleLogout = () => {
+    // Clear auth data from localStorage
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    
+    // Update state
+    setIsLoggedIn(false);
+    setDropdownOpen(false);
+    
+    // Navigate to home page
+    navigate('/');
+    
+    // Show success message
+    toast.success('Logged out successfully');
+  };
+
   // Function to determine active link style
   const getLinkClass = ({ isActive }) => {
     return isActive 
-      ? "text-white font-medium no-underline"
+      ? "text-primary font-medium no-underline"
       : "text-gray-300 hover:text-white transition-colors no-underline";
   };
   
@@ -65,21 +101,34 @@ const Header = () => {
           
           {/* Main Navigation - Desktop */}
           <nav className="hidden md:flex items-center space-x-6">
-            <NavLink to="/" className={getLinkClass}>
-              Home
-            </NavLink>
-            <NavLink to="/movies" className={getLinkClass}>
-              Movies
-            </NavLink>
-            <NavLink to="/tv-series" className={getLinkClass}>
-              TV Shows
-            </NavLink>
-            <NavLink to="/pricing" className={getLinkClass}>
-              Pricing
-            </NavLink>
-            <NavLink to="/about" className={getLinkClass}>
-              About
-            </NavLink>
+            {isLoggedIn ? (
+              <>
+                <NavLink to="/browse" className={getLinkClass}>
+                  Browse
+                </NavLink>
+                <NavLink to="/movies" className={getLinkClass}>
+                  Movies
+                </NavLink>
+                <NavLink to="/tv-series" className={getLinkClass}>
+                  TV Shows
+                </NavLink>
+                <NavLink to="/my-library" className={getLinkClass}>
+                  My Library
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/" className={getLinkClass}>
+                  Home
+                </NavLink>
+                <NavLink to="/pricing" className={getLinkClass}>
+                  Pricing
+                </NavLink>
+                <NavLink to="/about" className={getLinkClass}>
+                  About
+                </NavLink>
+              </>
+            )}
           </nav>
           
           {/* Mobile menu button */}
@@ -133,7 +182,7 @@ const Header = () => {
                       <div className="border-t border-gray-800 mt-1"></div>
                       <button 
                         className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
-                        onClick={() => setIsLoggedIn(false)}
+                        onClick={handleLogout}
                       >
                         Sign Out
                       </button>
@@ -159,41 +208,62 @@ const Header = () => {
           <div className="md:hidden fixed inset-0 bg-black z-50 pt-16">
             <div className="p-4">
               <nav className="flex flex-col space-y-4">
-                <NavLink 
-                  to="/" 
-                  className={`text-lg py-2 no-underline ${location.pathname === '/' ? 'text-white font-medium' : 'text-gray-300'}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Home
-                </NavLink>
-                <NavLink 
-                  to="/movies" 
-                  className={`text-lg py-2 no-underline ${location.pathname === '/movies' ? 'text-white font-medium' : 'text-gray-300'}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Movies
-                </NavLink>
-                <NavLink 
-                  to="/tv-series" 
-                  className={`text-lg py-2 no-underline ${location.pathname === '/tv-series' ? 'text-white font-medium' : 'text-gray-300'}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  TV Shows
-                </NavLink>
-                <NavLink 
-                  to="/pricing" 
-                  className={`text-lg py-2 no-underline ${location.pathname === '/pricing' ? 'text-white font-medium' : 'text-gray-300'}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Pricing
-                </NavLink>
-                <NavLink 
-                  to="/about" 
-                  className={`text-lg py-2 no-underline ${location.pathname === '/about' ? 'text-white font-medium' : 'text-gray-300'}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  About
-                </NavLink>
+                {isLoggedIn ? (
+                  <>
+                    <NavLink 
+                      to="/browse" 
+                      className={`text-lg py-2 no-underline ${location.pathname === '/browse' ? 'text-white font-medium' : 'text-gray-300'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Browse
+                    </NavLink>
+                    <NavLink 
+                      to="/movies" 
+                      className={`text-lg py-2 no-underline ${location.pathname === '/movies' ? 'text-white font-medium' : 'text-gray-300'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Movies
+                    </NavLink>
+                    <NavLink 
+                      to="/tv-series" 
+                      className={`text-lg py-2 no-underline ${location.pathname === '/tv-series' ? 'text-white font-medium' : 'text-gray-300'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      TV Shows
+                    </NavLink>
+                    <NavLink 
+                      to="/my-library" 
+                      className={`text-lg py-2 no-underline ${location.pathname === '/my-library' ? 'text-white font-medium' : 'text-gray-300'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      My Library
+                    </NavLink>
+                  </>
+                ) : (
+                  <>
+                    <NavLink 
+                      to="/" 
+                      className={`text-lg py-2 no-underline ${location.pathname === '/' ? 'text-white font-medium' : 'text-gray-300'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Home
+                    </NavLink>
+                    <NavLink 
+                      to="/pricing" 
+                      className={`text-lg py-2 no-underline ${location.pathname === '/pricing' ? 'text-white font-medium' : 'text-gray-300'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Pricing
+                    </NavLink>
+                    <NavLink 
+                      to="/about" 
+                      className={`text-lg py-2 no-underline ${location.pathname === '/about' ? 'text-white font-medium' : 'text-gray-300'}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      About
+                    </NavLink>
+                  </>
+                )}
               </nav>
               
               {/* Auth Buttons - Mobile */}
@@ -207,13 +277,6 @@ const Header = () => {
                       <span className="text-white font-medium">John Doe</span>
                     </div>
                     <div className="mt-4 flex flex-col space-y-4">
-                      <NavLink 
-                        to="/my-library" 
-                        className="py-2 text-gray-300 hover:text-white no-underline"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        My Library
-                      </NavLink>
                       <NavLink 
                         to="/profile-settings" 
                         className="py-2 text-gray-300 hover:text-white no-underline"
@@ -231,7 +294,7 @@ const Header = () => {
                       <button 
                         className="py-2 text-gray-300 hover:text-white text-left"
                         onClick={() => {
-                          setIsLoggedIn(false);
+                          handleLogout();
                           setMobileMenuOpen(false);
                         }}
                       >
