@@ -11,27 +11,35 @@ import Footer from './components/Footer';
 // Import pages
 import Home from './pages/Home';
 import Browse from './pages/Browse';
-import Movies from './pages/Movies';
-import MovieDetail from './pages/MovieDetail';
-import TVSeries from './pages/TVSeries';
-import TVSeriesDetail from './pages/TVSeriesDetail';
-import EpisodeDetail from './pages/EpisodeDetail';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import MyLibrary from './pages/MyLibrary';
 import NotFound from './pages/NotFound';
-// Import existing pages
 import About from './pages/About';
 import Pricing from './pages/Pricing';
-// Import new pages
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Terms from './pages/Terms';
-import RefundPolicy from './pages/RefundPolicy';
-import CancellationPolicy from './pages/CancellationPolicy';
 import ContactUs from './pages/ContactUs';
-import TransactionHistory from './pages/TransactionHistory';
-import ProfileSettings from './pages/ProfileSettings';
+
+// Auth pages
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import ForgotPassword from './pages/auth/ForgotPassword';
+
+// Media pages
+import Movies from './pages/media/Movies';
+import MovieDetail from './pages/media/MovieDetail';
+import TVSeries from './pages/media/TVSeries';
+import TVSeriesDetail from './pages/media/TVSeriesDetail';
+import EpisodeDetail from './pages/media/EpisodeDetail';
+
+// Library pages
+import MyLibrary from './pages/library/MyLibrary';
+
+// Profile pages
+import TransactionHistory from './pages/profile/TransactionHistory';
+import ProfileSettings from './pages/profile/ProfileSettings';
+
+// Policy pages
+import PrivacyPolicy from './pages/policies/PrivacyPolicy';
+import Terms from './pages/policies/Terms';
+import RefundPolicy from './pages/policies/RefundPolicy';
+import CancellationPolicy from './pages/policies/CancellationPolicy';
 
 function App() {
   return (
@@ -54,7 +62,7 @@ function App() {
           <Route path="/profile-settings" element={<ProfileSettings />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
-          {/* New routes */}
+          {/* Policy routes */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />

@@ -83,19 +83,19 @@ const Header = () => {
     toast.success('Logged out successfully');
   };
 
-  // Function to determine active link style
+  // Function to determine active link style - Netflix style
   const getLinkClass = ({ isActive }) => {
     return isActive 
-      ? "text-primary font-medium no-underline"
-      : "text-gray-300 hover:text-white transition-colors no-underline";
+      ? "text-white font-medium no-underline"
+      : "text-gray-300 hover:text-white transition-colors duration-300 no-underline";
   };
   
   return (
-    <header className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-black' : 'bg-gradient-to-b from-black/80 to-transparent'}`}>
-      <div className="container mx-auto px-4 md:px-6">
+    <header className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-black' : 'bg-gradient-to-b from-black via-black/80 to-transparent'}`}>
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link to="/" className="text-accent text-3xl font-bold no-underline">
+          <Link to="/" className="text-red-600 text-3xl font-bold no-underline">
             ZAUKHO
           </Link>
           
@@ -113,7 +113,7 @@ const Header = () => {
                   TV Shows
                 </NavLink>
                 <NavLink to="/my-library" className={getLinkClass}>
-                  My Library
+                  My List
                 </NavLink>
               </>
             ) : (
@@ -122,7 +122,7 @@ const Header = () => {
                   Home
                 </NavLink>
                 <NavLink to="/pricing" className={getLinkClass}>
-                  Pricing
+                  Plans
                 </NavLink>
                 <NavLink to="/about" className={getLinkClass}>
                   About
@@ -131,81 +131,93 @@ const Header = () => {
             )}
           </nav>
           
-          {/* Mobile menu button */}
-          <button 
-            className="md:hidden text-white focus:outline-none"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+          {/* Right side items - Search, Notifications, Profile */}
+          <div className="flex items-center space-x-4">
+            {/* Search Icon */}
+            {isLoggedIn && (
+              <button className="text-white hover:text-gray-300 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
             )}
-          </button>
+            
+            {/* Mobile menu button */}
+            <button 
+              className="md:hidden text-white focus:outline-none"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
           
-          {/* User Profile - Desktop */}
-          <div className="hidden md:block">
-            {isLoggedIn ? (
-              <div className="relative" ref={dropdownRef}>
-                <button 
-                  className="flex items-center space-x-2 text-white"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
-                    <span className="text-white text-sm font-semibold">JD</span>
-                  </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-                
-                {/* Dropdown Menu - Netflix Style */}
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-black border border-gray-800 rounded shadow-lg overflow-hidden z-50">
-                    <div className="py-1">
-                      <div className="border-b border-gray-800 pb-1">
-                        <p className="px-4 py-2 text-sm text-gray-400">John Doe</p>
-                      </div>
-                      <NavLink to="/my-library" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 no-underline">
-                        My Library
-                      </NavLink>
-                      <NavLink to="/profile-settings" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 no-underline">
-                        Profile Settings
-                      </NavLink>
-                      <NavLink to="/transaction-history" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 no-underline">
-                        Transaction History
-                      </NavLink>
-                      <div className="border-t border-gray-800 mt-1"></div>
-                      <button 
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
-                        onClick={handleLogout}
-                      >
-                        Sign Out
-                      </button>
+            {/* User Profile - Desktop */}
+            <div className="hidden md:block">
+              {isLoggedIn ? (
+                <div className="relative" ref={dropdownRef}>
+                  <button 
+                    className="flex items-center space-x-2 text-white"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                  >
+                    <div className="w-8 h-8 rounded bg-red-600 flex items-center justify-center">
+                      <span className="text-white text-sm font-semibold">JD</span>
                     </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center space-x-4">
-                <Link to="/login" className="text-gray-300 hover:text-white transition-colors no-underline">
-                  Sign In
-                </Link>
-                <Link to="/register" className="bg-accent text-white px-4 py-1 rounded hover:bg-accent-dark transition-colors no-underline">
-                  Sign Up
-                </Link>
-              </div>
-            )}
+                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  
+                  {/* Dropdown Menu - Netflix Style */}
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-black/90 border border-gray-800 rounded shadow-lg overflow-hidden z-50">
+                      <div className="py-1">
+                        <div className="border-b border-gray-800 pb-1">
+                          <p className="px-4 py-2 text-sm text-gray-400">John Doe</p>
+                        </div>
+                        <NavLink to="/my-library" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 no-underline">
+                          My List
+                        </NavLink>
+                        <NavLink to="/profile-settings" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 no-underline">
+                          Account
+                        </NavLink>
+                        <NavLink to="/transaction-history" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 no-underline">
+                          Billing
+                        </NavLink>
+                        <div className="border-t border-gray-800 mt-1"></div>
+                        <button 
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-800"
+                          onClick={handleLogout}
+                        >
+                          Sign Out of ZAUKHO
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center space-x-4">
+                  <Link to="/login" className="text-gray-300 hover:text-white transition-colors no-underline">
+                    Sign In
+                  </Link>
+                  <Link to="/register" className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700 transition-colors no-underline">
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         
         {/* Mobile Navigation - Netflix Style Overlay */}
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 bg-black z-50 pt-16">
+          <div className="md:hidden fixed inset-0 bg-black/95 z-50 pt-16">
             <div className="p-4">
               <nav className="flex flex-col space-y-4">
                 {isLoggedIn ? (
@@ -236,7 +248,7 @@ const Header = () => {
                       className={`text-lg py-2 no-underline ${location.pathname === '/my-library' ? 'text-white font-medium' : 'text-gray-300'}`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      My Library
+                      My List
                     </NavLink>
                   </>
                 ) : (
@@ -253,7 +265,7 @@ const Header = () => {
                       className={`text-lg py-2 no-underline ${location.pathname === '/pricing' ? 'text-white font-medium' : 'text-gray-300'}`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Pricing
+                      Plans
                     </NavLink>
                     <NavLink 
                       to="/about" 
@@ -271,7 +283,7 @@ const Header = () => {
                 {isLoggedIn ? (
                   <>
                     <div className="py-3 flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                      <div className="w-10 h-10 rounded bg-red-600 flex items-center justify-center">
                         <span className="text-white text-sm font-semibold">JD</span>
                       </div>
                       <span className="text-white font-medium">John Doe</span>
@@ -282,14 +294,14 @@ const Header = () => {
                         className="py-2 text-gray-300 hover:text-white no-underline"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Profile Settings
+                        Account
                       </NavLink>
                       <NavLink 
                         to="/transaction-history" 
                         className="py-2 text-gray-300 hover:text-white no-underline"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Transaction History
+                        Billing
                       </NavLink>
                       <button 
                         className="py-2 text-gray-300 hover:text-white text-left"
@@ -313,7 +325,7 @@ const Header = () => {
                     </Link>
                     <Link 
                       to="/register" 
-                      className="py-2 bg-accent text-white rounded text-center hover:bg-accent-dark no-underline"
+                      className="py-2 bg-red-600 text-white rounded text-center hover:bg-red-700 no-underline"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Sign Up

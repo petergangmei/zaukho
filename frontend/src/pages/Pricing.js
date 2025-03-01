@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Button, PricingCard } from '../components/common';
 
 const Pricing = () => {
   // Toggle for monthly/annual billing
@@ -50,294 +51,212 @@ const Pricing = () => {
         "Priority customer support"
       ],
       highlight: false,
-      cta: "Go Ultimate"
+      cta: "Get Ultimate"
     }
   ];
-
-  // Calculate savings
-  const calculateSavings = (monthlyPrice, annualPrice) => {
-    const monthlyCostPerYear = monthlyPrice * 12;
-    const savings = monthlyCostPerYear - annualPrice;
-    return Math.round(savings);
+  
+  // Handle plan selection
+  const handleSelectPlan = (planName) => {
+    console.log(`Selected plan: ${planName}`);
+    // In a real app, this would navigate to checkout or registration
   };
-
-  // FAQs data
-  const faqs = [
-    {
-      question: "Can I change my plan later?",
-      answer: "Yes, you can upgrade, downgrade, or cancel your subscription at any time. Changes to your subscription will take effect on your next billing cycle."
-    },
-    {
-      question: "How many people can use one account?",
-      answer: "The number of simultaneous streams depends on your plan. Basic allows 1 stream, Premium allows 3 streams, and Ultimate allows 5 streams at the same time."
-    },
-    {
-      question: "Do you offer family sharing?",
-      answer: "Yes, our Premium and Ultimate plans are designed with families in mind, allowing multiple simultaneous streams and personalized profiles for each family member."
-    },
-    {
-      question: "Do you offer student discounts?",
-      answer: "Yes, we offer a 20% discount for verified students on any plan. Contact our support team with your valid student ID to apply for the discount."
-    },
-    {
-      question: "Can I still rent or buy individual movies?",
-      answer: "Absolutely! In addition to our subscription plans, you can rent or purchase specific titles that may not be included in the subscription catalog."
-    }
-  ];
-
+  
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Simple, Transparent Pricing</h1>
-            <p className="text-xl text-gray-300 mb-10">Choose the plan that's right for you and start streaming today.</p>
-            
-            {/* Billing Toggle */}
-            <div className="flex items-center justify-center mb-12">
-              <span className={`text-lg ${!isAnnual ? 'text-white font-bold' : 'text-gray-400'}`}>Monthly</span>
-              <button 
-                className="relative mx-4 w-16 h-8 flex items-center bg-gray-700 rounded-full p-1 cursor-pointer"
-                onClick={() => setIsAnnual(!isAnnual)}
+    <div className="min-h-screen bg-black text-white py-16">
+      <div className="container mx-auto px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Choose Your Plan</h1>
+            <p className="text-xl text-gray-300 mb-6 max-w-3xl mx-auto">
+              Join ZAUKHO for unlimited access to our library of movies and TV shows. 
+              Cancel anytime, no commitments.
+            </p>
+            <div className="w-24 h-1 bg-red-600 mx-auto"></div>
+          </div>
+          
+          {/* Billing Toggle */}
+          <div className="flex justify-center mb-12">
+            <div className="bg-gray-900 p-1 rounded-full inline-flex">
+              <button
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                  !isAnnual ? 'bg-red-600 text-white' : 'text-gray-300 hover:text-white'
+                }`}
+                onClick={() => setIsAnnual(false)}
               >
-                <div 
-                  className={`bg-red-600 w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${isAnnual ? 'translate-x-8' : ''}`}
-                />
+                Monthly
               </button>
-              <span className={`text-lg ${isAnnual ? 'text-white font-bold' : 'text-gray-400'}`}>
-                Annual <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full ml-1">Save up to 20%</span>
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Pricing Cards */}
-      <section className="py-12 -mt-10">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
-              <div 
-                key={index} 
-                className={`rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-105 ${plan.highlight ? 'bg-gradient-to-b from-red-900 to-red-800 border-2 border-red-500 transform scale-105 md:scale-110 z-10 shadow-xl' : 'bg-gray-800'}`}
+              <button
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                  isAnnual ? 'bg-red-600 text-white' : 'text-gray-300 hover:text-white'
+                }`}
+                onClick={() => setIsAnnual(true)}
               >
-                <div className="p-8">
-                  <h2 className="text-2xl font-bold mb-4">{plan.name}</h2>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold">${isAnnual ? plan.annualPrice : plan.monthlyPrice}</span>
-                    <span className="text-gray-400">/{isAnnual ? 'year' : 'month'}</span>
-                    
-                    {isAnnual && (
-                      <div className="text-green-500 text-sm mt-2">
-                        Save ${calculateSavings(plan.monthlyPrice, plan.annualPrice)} per year
-                      </div>
-                    )}
-                  </div>
-                  
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start">
-                        <svg className="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span className="text-gray-300">{feature}</span>
-                      </li>
+                Annual <span className="text-xs font-bold text-green-400 ml-1">Save 16%</span>
+              </button>
+            </div>
+          </div>
+          
+          {/* Pricing Cards */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {plans.map((plan) => (
+              <PricingCard
+                key={plan.name}
+                name={plan.name}
+                monthlyPrice={plan.monthlyPrice}
+                annualPrice={plan.annualPrice}
+                features={plan.features}
+                highlight={plan.highlight}
+                cta={plan.cta}
+                isAnnual={isAnnual}
+                onSelect={() => handleSelectPlan(plan.name)}
+              />
+            ))}
+          </div>
+          
+          {/* Features Comparison */}
+          <div className="mt-20 bg-gray-900 rounded-lg p-8 border border-gray-800">
+            <h2 className="text-2xl font-bold mb-8 text-center">Compare All Features</h2>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-800">
+                    <th className="text-left py-4 px-4 font-medium text-gray-400">Features</th>
+                    {plans.map((plan) => (
+                      <th key={plan.name} className="text-center py-4 px-4 font-medium">
+                        <span className={plan.highlight ? "text-red-500" : "text-white"}>
+                          {plan.name}
+                        </span>
+                      </th>
                     ))}
-                  </ul>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Video Quality */}
+                  <tr className="border-b border-gray-800">
+                    <td className="py-4 px-4 text-gray-300">Video Quality</td>
+                    <td className="text-center py-4 px-4">Good</td>
+                    <td className="text-center py-4 px-4">Better</td>
+                    <td className="text-center py-4 px-4">Best</td>
+                  </tr>
                   
-                  <Link 
-                    to="/register" 
-                    className={`block w-full py-3 px-4 rounded-md text-center font-semibold transition ${plan.highlight ? 'bg-white text-red-900 hover:bg-gray-100' : 'bg-red-600 text-white hover:bg-red-700'}`}
-                  >
-                    {plan.cta}
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      {/* Features Comparison */}
-      <section className="py-16 bg-gray-950">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            <span className="inline-block border-b-4 border-red-600 pb-1">Compare All Features</span>
-          </h2>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full max-w-4xl mx-auto">
-              <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="py-4 px-6 text-left">Feature</th>
-                  <th className="py-4 px-6 text-center">Basic</th>
-                  <th className="py-4 px-6 text-center">Premium</th>
-                  <th className="py-4 px-6 text-center">Ultimate</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-800">
-                  <td className="py-4 px-6">Monthly Price</td>
-                  <td className="py-4 px-6 text-center">${plans[0].monthlyPrice}</td>
-                  <td className="py-4 px-6 text-center">${plans[1].monthlyPrice}</td>
-                  <td className="py-4 px-6 text-center">${plans[2].monthlyPrice}</td>
-                </tr>
-                <tr className="border-b border-gray-800">
-                  <td className="py-4 px-6">Video Quality</td>
-                  <td className="py-4 px-6 text-center">HD</td>
-                  <td className="py-4 px-6 text-center">Full HD, 4K</td>
-                  <td className="py-4 px-6 text-center">HD, 4K, HDR, Dolby</td>
-                </tr>
-                <tr className="border-b border-gray-800">
-                  <td className="py-4 px-6">Simultaneous Streams</td>
-                  <td className="py-4 px-6 text-center">1</td>
-                  <td className="py-4 px-6 text-center">3</td>
-                  <td className="py-4 px-6 text-center">5</td>
-                </tr>
-                <tr className="border-b border-gray-800">
-                  <td className="py-4 px-6">Ads</td>
-                  <td className="py-4 px-6 text-center">Yes</td>
-                  <td className="py-4 px-6 text-center">No</td>
-                  <td className="py-4 px-6 text-center">No</td>
-                </tr>
-                <tr className="border-b border-gray-800">
-                  <td className="py-4 px-6">Downloads</td>
-                  <td className="py-4 px-6 text-center">
-                    <svg className="h-6 w-6 text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </td>
-                  <td className="py-4 px-6 text-center">20 titles</td>
-                  <td className="py-4 px-6 text-center">Unlimited</td>
-                </tr>
-                <tr className="border-b border-gray-800">
-                  <td className="py-4 px-6">Early Access</td>
-                  <td className="py-4 px-6 text-center">
-                    <svg className="h-6 w-6 text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </td>
-                  <td className="py-4 px-6 text-center">
-                    <svg className="h-6 w-6 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </td>
-                  <td className="py-4 px-6 text-center">
-                    <svg className="h-6 w-6 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6">Priority Support</td>
-                  <td className="py-4 px-6 text-center">
-                    <svg className="h-6 w-6 text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </td>
-                  <td className="py-4 px-6 text-center">
-                    <svg className="h-6 w-6 text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </td>
-                  <td className="py-4 px-6 text-center">
-                    <svg className="h-6 w-6 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-      
-      {/* FAQ Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            <span className="inline-block border-b-4 border-red-600 pb-1">Frequently Asked Questions</span>
-          </h2>
-          
-          <div className="max-w-3xl mx-auto space-y-6">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-gray-800 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-3">{faq.question}</h3>
-                <p className="text-gray-300">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      
-      {/* Pay-Per-View Section */}
-      <section className="py-16 bg-gradient-to-r from-indigo-900 to-purple-900">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between">
-            <div className="md:w-1/2 mb-8 md:mb-0">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Not Ready for a Subscription?</h2>
-              <p className="text-xl text-gray-300 mb-4">
-                Try our pay-per-view options for individual movies and TV episodes.
-              </p>
-              <ul className="space-y-2 mb-6">
-                <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>New releases from $3.99</span>
-                </li>
-                <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>Classic movies from $1.99</span>
-                </li>
-                <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>TV episodes from $0.99</span>
-                </li>
-                <li className="flex items-center">
-                  <svg className="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span>48-hour viewing window</span>
-                </li>
-              </ul>
+                  {/* Resolution */}
+                  <tr className="border-b border-gray-800">
+                    <td className="py-4 px-4 text-gray-300">Resolution</td>
+                    <td className="text-center py-4 px-4">720p</td>
+                    <td className="text-center py-4 px-4">1080p/4K</td>
+                    <td className="text-center py-4 px-4">4K + HDR</td>
+                  </tr>
+                  
+                  {/* Simultaneous Streams */}
+                  <tr className="border-b border-gray-800">
+                    <td className="py-4 px-4 text-gray-300">Simultaneous Streams</td>
+                    <td className="text-center py-4 px-4">1</td>
+                    <td className="text-center py-4 px-4">3</td>
+                    <td className="text-center py-4 px-4">5</td>
+                  </tr>
+                  
+                  {/* Downloads */}
+                  <tr className="border-b border-gray-800">
+                    <td className="py-4 px-4 text-gray-300">Downloads</td>
+                    <td className="text-center py-4 px-4">
+                      <svg className="h-5 w-5 text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </td>
+                    <td className="text-center py-4 px-4">Up to 20</td>
+                    <td className="text-center py-4 px-4">Unlimited</td>
+                  </tr>
+                  
+                  {/* Ad-Free */}
+                  <tr className="border-b border-gray-800">
+                    <td className="py-4 px-4 text-gray-300">Ad-Free</td>
+                    <td className="text-center py-4 px-4">
+                      <svg className="h-5 w-5 text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </td>
+                    <td className="text-center py-4 px-4">
+                      <svg className="h-5 w-5 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </td>
+                    <td className="text-center py-4 px-4">
+                      <svg className="h-5 w-5 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </td>
+                  </tr>
+                  
+                  {/* Early Access */}
+                  <tr className="border-b border-gray-800">
+                    <td className="py-4 px-4 text-gray-300">Early Access</td>
+                    <td className="text-center py-4 px-4">
+                      <svg className="h-5 w-5 text-red-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </td>
+                    <td className="text-center py-4 px-4">
+                      <svg className="h-5 w-5 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </td>
+                    <td className="text-center py-4 px-4">
+                      <svg className="h-5 w-5 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div className="md:w-5/12">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
-                <h3 className="text-2xl font-bold mb-4 text-center">Browse Our Catalog</h3>
-                <p className="text-center mb-6">Sign up for free to browse our collection of over 10,000 titles</p>
-                <Link 
-                  to="/register" 
-                  className="block w-full py-3 px-4 bg-white text-purple-900 rounded-md text-center font-semibold hover:bg-gray-100 transition"
-                >
-                  Create Free Account
-                </Link>
+          </div>
+          
+          {/* FAQ Section */}
+          <div className="mt-20">
+            <h2 className="text-2xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
+            
+            <div className="space-y-4">
+              <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                <h3 className="text-xl font-semibold mb-3">Can I change my plan later?</h3>
+                <p className="text-gray-300">Yes, you can upgrade, downgrade, or cancel your subscription at any time. Changes to your subscription will take effect on your next billing date.</p>
+              </div>
+              
+              <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                <h3 className="text-xl font-semibold mb-3">How does the billing work?</h3>
+                <p className="text-gray-300">Your subscription will be automatically renewed at the end of each billing period. You can cancel at any time before your next billing date to avoid charges.</p>
+              </div>
+              
+              <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                <h3 className="text-xl font-semibold mb-3">Is there a free trial?</h3>
+                <p className="text-gray-300">Yes, new members receive a 7-day free trial. You won't be charged until your trial period ends, and you can cancel anytime during the trial.</p>
+              </div>
+              
+              <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                <h3 className="text-xl font-semibold mb-3">What payment methods do you accept?</h3>
+                <p className="text-gray-300">We accept all major credit cards, PayPal, and select digital payment methods. Gift cards are also available for purchase.</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-      
-      {/* CTA Section */}
-      <section className="py-16 bg-gray-900">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Start Your Entertainment Journey Today</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Join millions of viewers enjoying premium content at affordable prices. Cancel anytime.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/register" className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white text-lg font-bold rounded-md transition">
-              Try Free for 14 Days
-            </Link>
+          
+          {/* CTA Section */}
+          <div className="mt-16 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">Ready to start your streaming journey?</h2>
+            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+              Join millions of viewers enjoying the latest movies and TV shows on ZAUKHO.
+            </p>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => handleSelectPlan('Premium')}
+            >
+              Get Started
+            </Button>
+            <p className="mt-4 text-sm text-gray-400">No contracts, cancel anytime.</p>
           </div>
-          <p className="text-gray-500 mt-4">No credit card required for trial</p>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

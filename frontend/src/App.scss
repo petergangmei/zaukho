@@ -111,4 +111,14 @@
       background-color: var(--primary-color);
     }
   }
+}
+
+/* Netflix-style scrollbar hiding for horizontal carousels */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 } 

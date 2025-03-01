@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { HeroSection, ContentRow } from '../components/common';
 
 const Browse = () => {
   const navigate = useNavigate();
@@ -12,125 +13,101 @@ const Browse = () => {
     }
   }, [navigate]);
 
+  // Mock featured content for hero section
+  const featuredContent = {
+    id: 'movie-1',
+    title: 'Interstellar',
+    description: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity\'s survival.',
+    backgroundImage: 'https://dummyimage.com/1920x1080/333/fff',
+    matchPercentage: 98,
+    year: '2014',
+    rating: 'PG-13',
+    duration: '2h 49m',
+    quality: 'HD'
+  };
+
+  // Mock data for content rows
+  const trendingItems = [1, 2, 3, 4, 5, 6, 7, 8].map(item => ({
+    id: `trending-${item}`,
+    title: `Trending Title ${item}`,
+    image: 'https://dummyimage.com/640x360/333/fff',
+    type: 'movie',
+    matchPercentage: 97
+  }));
+
+  const popularItems = [1, 2, 3, 4, 5, 6, 7, 8].map(item => ({
+    id: `popular-${item}`,
+    title: `Popular Title ${item}`,
+    image: 'https://dummyimage.com/300x450/333/fff',
+    type: 'movie'
+  }));
+
+  const continueWatchingItems = [1, 2, 3, 4, 5].map(item => ({
+    id: `continue-${item}`,
+    title: `Continue Title ${item}`,
+    image: 'https://dummyimage.com/640x360/333/fff',
+    type: 'tv',
+    progress: 30 + (item * 10),
+    episodeInfo: `S1:E${item}`
+  }));
+
+  // Handle play button click
+  const handlePlay = () => {
+    console.log('Play button clicked');
+    // Navigate to video player or show modal
+  };
+
+  // Handle more info button click
+  const handleMoreInfo = () => {
+    console.log('More info button clicked');
+    // Navigate to details page or show modal
+  };
+
   return (
-    <div className="min-h-screen bg-black text-white pt-20">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Browse Content</h1>
+    <div className="min-h-screen bg-black text-white">
+      {/* Hero Section */}
+      <HeroSection 
+        content={featuredContent}
+        onPlay={handlePlay}
+        onMoreInfo={handleMoreInfo}
+      />
+      
+      <div className="container mx-auto px-4 py-8 -mt-16 relative z-20">
+        {/* Trending Now */}
+        <ContentRow
+          title="Trending Now"
+          items={trendingItems}
+          isWideCard={true}
+        />
         
-        {/* Featured Content */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Featured</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Featured Item 1 */}
-            <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-              <img 
-                src="https://dummyimage.com/600x400/333/fff" 
-                alt="Featured Movie" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2">The Dark Knight</h3>
-                <p className="text-gray-300 text-sm mb-3">Action, Crime, Drama • 2008</p>
-                <div className="flex justify-between items-center">
-                  <span className="bg-gray-700 text-xs px-2 py-1 rounded">HD</span>
-                  <button className="text-accent hover:text-accent-dark">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            {/* Featured Item 2 */}
-            <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-              <img 
-                src="https://dummyimage.com/600x400/333/fff" 
-                alt="Featured Movie" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2">Inception</h3>
-                <p className="text-gray-300 text-sm mb-3">Action, Adventure, Sci-Fi • 2010</p>
-                <div className="flex justify-between items-center">
-                  <span className="bg-gray-700 text-xs px-2 py-1 rounded">4K</span>
-                  <button className="text-accent hover:text-accent-dark">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            {/* Featured Item 3 */}
-            <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-              <img 
-                src="https://dummyimage.com/600x400/333/fff" 
-                alt="Featured Movie" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2">Interstellar</h3>
-                <p className="text-gray-300 text-sm mb-3">Adventure, Drama, Sci-Fi • 2014</p>
-                <div className="flex justify-between items-center">
-                  <span className="bg-gray-700 text-xs px-2 py-1 rounded">HD</span>
-                  <button className="text-accent hover:text-accent-dark">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Popular on ZAUKHO */}
+        <ContentRow
+          title="Popular on ZAUKHO"
+          items={popularItems}
+          isWideCard={false}
+        />
         
-        {/* Popular Movies */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Popular Movies</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-                <img 
-                  src={`https://dummyimage.com/300x450/333/fff`}
-                  alt={`Movie ${item}`}
-                  className="w-full h-auto object-cover"
-                />
-                <div className="p-2">
-                  <h3 className="text-sm font-medium truncate">Movie Title {item}</h3>
-                  <p className="text-xs text-gray-400">2023</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-        
-        {/* Popular TV Shows */}
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Popular TV Shows</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div key={item} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
-                <img 
-                  src={`https://dummyimage.com/300x450/333/fff`}
-                  alt={`TV Show ${item}`}
-                  className="w-full h-auto object-cover"
-                />
-                <div className="p-2">
-                  <h3 className="text-sm font-medium truncate">TV Show Title {item}</h3>
-                  <p className="text-xs text-gray-400">2023</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Continue Watching */}
+        <ContentRow
+          title="Continue Watching"
+          items={continueWatchingItems}
+          isWideCard={true}
+          showProgress={true}
+        />
       </div>
     </div>
   );
 };
 
-export default Browse; 
+export default Browse;
+
+/* Add this to your global CSS file */
+/* 
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+*/ 
