@@ -14,6 +14,7 @@ import TVSeries from './pages/TVSeries';
 import TVSeriesDetail from './pages/TVSeriesDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import MyLibrary from './pages/MyLibrary';
 import NotFound from './pages/NotFound';
 // Import existing pages
@@ -39,6 +40,7 @@ function App() {
           <Route path="/tv-series/:id" element={<TVSeriesDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/my-library" element={<MyLibrary />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />

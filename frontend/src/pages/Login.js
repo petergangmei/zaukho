@@ -97,7 +97,7 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                   errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
                 autoComplete="email"
@@ -117,7 +117,7 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                   errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
                 autoComplete="current-password"
@@ -128,7 +128,7 @@ const Login = () => {
             </div>
             
             <div className="text-right">
-              <Link to="/forgot-password" className="text-sm text-blue-600 hover:underline dark:text-blue-400">
+              <Link to="/forgot-password" className="text-sm text-red-600 hover:underline dark:text-red-400">
                 Forgot your password?
               </Link>
             </div>
@@ -137,8 +137,8 @@ const Login = () => {
               type="submit" 
               className={`w-full py-2 px-4 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                 isSubmitting 
-                  ? 'bg-blue-400 cursor-not-allowed dark:bg-blue-500' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600'
+                  ? 'bg-red-400 cursor-not-allowed dark:bg-red-500' 
+                  : 'bg-red-600 hover:bg-red-700 text-white dark:bg-red-500 dark:hover:bg-red-600'
               }`}
               disabled={isSubmitting}
             >
@@ -148,7 +148,7 @@ const Login = () => {
           
           <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             Don't have an account?{' '}
-            <Link to="/register" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+            <Link to="/register" className="font-medium text-red-600 hover:underline dark:text-red-400">
               Sign up
             </Link>
           </div>
