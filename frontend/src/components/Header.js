@@ -37,6 +37,12 @@ const Header = () => {
               <li className="nav-item">
                 <NavLink className="nav-link" to="/tv-series">TV Shows</NavLink>
               </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/pricing">Pricing</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/about">About</NavLink>
+              </li>
             </ul>
             
             <div className="d-flex">

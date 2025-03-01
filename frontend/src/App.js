@@ -16,6 +16,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import MyLibrary from './pages/MyLibrary';
 import NotFound from './pages/NotFound';
+// Import new pages
+import About from './pages/About';
+import Pricing from './pages/Pricing';
 
 function App() {
   return (
@@ -31,6 +34,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/my-library" element={<MyLibrary />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

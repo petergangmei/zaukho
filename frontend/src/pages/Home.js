@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Home.scss';
 
 // Placeholder data (would normally come from API)
 const featuredMovie = {
@@ -91,22 +90,46 @@ const Home = () => {
   }, []);
   
   return (
-    <div className="home-page">
+    <div className="min-h-screen bg-gray-900">
       {/* Hero Section */}
       <section 
-        className="hero" 
+        className="relative h-[80vh] bg-cover bg-center"
         style={{ backgroundImage: `url(${featuredMovie.poster})` }}
       >
-        <div className="container">
-          <div className="hero-content">
-            <h1>{featuredMovie.title}</h1>
-            <p>{featuredMovie.description}</p>
-            <div className="hero-buttons">
-              <Link to={`/movies/${featuredMovie.id}`} className="btn btn-primary me-3">
-                <i className="fas fa-play me-2"></i> Watch Now
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/10"></div>
+        
+        <div className="container mx-auto px-4 h-full relative z-10">
+          <div className="flex flex-col justify-center h-full max-w-2xl">
+            <span className="text-red-600 font-semibold mb-2">FEATURED PRESENTATION</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+              {featuredMovie.title}
+            </h1>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {featuredMovie.categories.map(category => (
+                <span key={category} className="px-2.5 py-1 bg-gray-800/60 text-white text-sm rounded-full">
+                  {category}
+                </span>
+              ))}
+            </div>
+            <p className="text-white/90 text-lg mb-6 drop-shadow-md">
+              {featuredMovie.description}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link 
+                to={`/movies/${featuredMovie.id}`} 
+                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md transition flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                </svg>
+                Watch Now
               </Link>
-              <button className="btn btn-outline-light">
-                <i className="fas fa-info-circle me-2"></i> More Info
+              <button className="px-6 py-3 bg-gray-700/50 hover:bg-gray-700/80 text-white font-semibold rounded-md transition border border-gray-600 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
+                </svg>
+                More Info
               </button>
             </div>
           </div>
@@ -114,112 +137,186 @@ const Home = () => {
       </section>
       
       {/* Featured Movies Section */}
-      <section className="featured-section">
-        <div className="container">
-          <h2>Featured Movies</h2>
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-white">
+              <span className="inline-block border-b-4 border-red-600 pb-1">Featured Movies</span>
+            </h2>
+            <Link to="/movies" className="text-gray-300 hover:text-white transition flex items-center gap-1">
+              View All
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+            </Link>
+          </div>
           
           {isLoading ? (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
+            <div className="flex justify-center py-20">
+              <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : (
-            <div className="row">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {featuredMovies.map(movie => (
-                <div key={movie.id} className="col-md-3 col-sm-6 mb-4">
-                  <div className="content-card">
+                <div key={movie.id} className="bg-gray-800 rounded-lg overflow-hidden group transform hover:scale-105 transition duration-300">
+                  <Link to={`/movies/${movie.id}`} className="block relative aspect-w-2 aspect-h-3">
                     <img 
                       src={movie.poster} 
-                      className="card-img-top" 
-                      alt={movie.title} 
+                      alt={movie.title}
+                      className="w-full h-full object-cover"
                     />
-                    <div className="card-body">
-                      <h5 className="card-title">{movie.title}</h5>
-                      <p className="card-text">{movie.description.substring(0, 80)}...</p>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div className="price">
-                          From ${movie.price_rent}
-                        </div>
-                        <Link to={`/movies/${movie.id}`} className="btn btn-sm btn-primary">
-                          Details
-                        </Link>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                      <div className="p-4 w-full">
+                        <button className="w-full py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded flex items-center justify-center gap-2 transition">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                          </svg>
+                          Watch Now
+                        </button>
                       </div>
+                    </div>
+                  </Link>
+                  <div className="p-4">
+                    <h3 className="text-white text-lg font-semibold">{movie.title}</h3>
+                    <p className="text-gray-400 text-sm line-clamp-2 mt-1 mb-3">{movie.description}</p>
+                    <div className="flex justify-between items-center">
+                      <div className="text-gray-300">
+                        <span className="text-green-500 font-semibold">${movie.price_rent}</span> or buy ${movie.price_buy}
+                      </div>
+                      <Link to={`/movies/${movie.id}`} className="text-red-500 hover:text-red-400 transition">
+                        Details
+                      </Link>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
-          
-          <div className="text-center mt-4">
-            <Link to="/movies" className="btn btn-outline-light">
-              View All Movies
-            </Link>
-          </div>
         </div>
       </section>
       
       {/* Featured TV Shows Section */}
-      <section className="featured-section">
-        <div className="container">
-          <h2>Featured TV Shows</h2>
+      <section className="py-16 bg-gray-950">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold text-white">
+              <span className="inline-block border-b-4 border-red-600 pb-1">Featured TV Shows</span>
+            </h2>
+            <Link to="/tv-series" className="text-gray-300 hover:text-white transition flex items-center gap-1">
+              View All
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+            </Link>
+          </div>
           
           {isLoading ? (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
+            <div className="flex justify-center py-20">
+              <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : (
-            <div className="row">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {featuredTVShows.map(show => (
-                <div key={show.id} className="col-md-3 col-sm-6 mb-4">
-                  <div className="content-card">
+                <div key={show.id} className="bg-gray-800 rounded-lg overflow-hidden group transform hover:scale-105 transition duration-300">
+                  <Link to={`/tv-series/${show.id}`} className="block relative aspect-w-2 aspect-h-3">
                     <img 
                       src={show.poster} 
-                      className="card-img-top" 
-                      alt={show.title} 
+                      alt={show.title}
+                      className="w-full h-full object-cover"
                     />
-                    <div className="card-body">
-                      <h5 className="card-title">{show.title}</h5>
-                      <p className="card-text">{show.description.substring(0, 80)}...</p>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div className="seasons">
-                          {show.seasons} {show.seasons === 1 ? 'Season' : 'Seasons'}
-                        </div>
-                        <Link to={`/tv-series/${show.id}`} className="btn btn-sm btn-primary">
-                          Details
-                        </Link>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                      <div className="p-4 w-full">
+                        <button className="w-full py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded flex items-center justify-center gap-2 transition">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                          </svg>
+                          Watch Now
+                        </button>
                       </div>
+                    </div>
+                  </Link>
+                  <div className="p-4">
+                    <h3 className="text-white text-lg font-semibold">{show.title}</h3>
+                    <p className="text-gray-400 text-sm line-clamp-2 mt-1 mb-3">{show.description}</p>
+                    <div className="flex justify-between items-center">
+                      <div className="px-2.5 py-1 bg-gray-700 text-gray-300 text-sm rounded-full">
+                        {show.seasons} {show.seasons === 1 ? 'Season' : 'Seasons'}
+                      </div>
+                      <Link to={`/tv-series/${show.id}`} className="text-red-500 hover:text-red-400 transition">
+                        Details
+                      </Link>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
+        </div>
+      </section>
+      
+      {/* Categories Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-white mb-8">
+            <span className="inline-block border-b-4 border-red-600 pb-1">Browse by Category</span>
+          </h2>
           
-          <div className="text-center mt-4">
-            <Link to="/tv-series" className="btn btn-outline-light">
-              View All TV Shows
-            </Link>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Documentary'].map(category => (
+              <div key={category} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-6 text-center hover:from-red-900 hover:to-red-800 transition cursor-pointer">
+                <h3 className="text-white text-lg font-semibold">{category}</h3>
+              </div>
+            ))}
           </div>
         </div>
       </section>
       
       {/* Subscription Banner */}
-      <section className="subscription-banner">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-8">
-              <h2>Subscribe for Premium Access</h2>
-              <p>Get unlimited access to all movies and TV shows with our premium subscription.</p>
+      <section className="py-16 bg-gradient-to-r from-red-900 to-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between">
+            <div className="md:w-7/12 mb-8 md:mb-0">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Premium Content Awaits</h2>
+              <p className="text-white/90 text-lg max-w-2xl">
+                Get unlimited access to all movies and TV shows with our premium subscription. 
+                No ads, no interruptions, just pure entertainment. Start your journey today!
+              </p>
             </div>
-            <div className="col-lg-4 text-lg-end mt-3 mt-lg-0">
-              <Link to="/pricing" className="btn btn-primary btn-lg">
+            <div className="md:w-5/12 flex justify-center md:justify-end">
+              <Link 
+                to="/pricing" 
+                className="px-8 py-4 bg-white text-red-900 text-lg font-bold rounded-md hover:bg-gray-100 transition transform hover:scale-105 inline-flex items-center gap-2"
+              >
                 View Plans
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Recent Additions */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-white mb-8">
+            <span className="inline-block border-b-4 border-red-600 pb-1">Recently Added</span>
+          </h2>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[...featuredMovies, ...featuredTVShows].slice(0, 6).map(item => (
+              <div key={item.id} className="bg-gray-800 rounded-lg overflow-hidden group transform hover:scale-105 transition duration-300">
+                <Link to={item.seasons ? `/tv-series/${item.id}` : `/movies/${item.id}`} className="block relative aspect-w-2 aspect-h-3">
+                  <img 
+                    src={item.poster} 
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">NEW</div>
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </section>
