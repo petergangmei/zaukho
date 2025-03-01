@@ -51,7 +51,8 @@ function App() {
   // Check authentication status when app loads
   useEffect(() => {
     // Check if user is authenticated
-    if (auth && auth.token) {
+    if (auth && auth.token && !auth.user) {
+      // Only fetch user data if we have a token but no user data
       dispatch(getCurrentUser());
     }
   }, [dispatch, auth]);

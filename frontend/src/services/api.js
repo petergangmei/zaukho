@@ -27,6 +27,10 @@ let isRefreshing = false;
 // Queue of failed requests to retry after token refresh
 let failedQueue = [];
 
+// Track last user request time to prevent excessive polling
+let lastUserRequestTime = 0;
+const USER_REQUEST_THROTTLE_MS = 10000; // 10 seconds minimum between requests
+
 // Process the queue of failed requests
 const processQueue = (error, token = null) => {
   failedQueue.forEach(prom => {
@@ -56,6 +60,17 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
+    // Handle network errors or server unavailable
+    if (!error.response) {
+      console.error('Network error or server unavailable:', error.message);
+      return Promise.reject({
+        response: {
+          status: 0,
+          data: { detail: 'Network error. Please check your connection and try again.' }
+        }
+      });
+    }
+    
     const originalRequest = error.config;
     
     // If the error is 401 and we haven't tried to refresh the token yet
@@ -125,6 +140,15 @@ apiClient.interceptors.response.use(
       }
     }
     
+    // Handle 400 Bad Request for logout specifically
+    if (error.response && error.response.status === 400 && 
+        originalRequest.url && originalRequest.url.includes('/auth/logout/')) {
+      // If logout fails with 400, it might be due to an already blacklisted token
+      // We'll still consider this a "successful" logout from the user's perspective
+      console.warn('Logout API returned 400, token might be already blacklisted');
+      return { data: { detail: 'Logged out successfully' } };
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -135,7 +159,19 @@ const api = {
   auth: {
     login: (credentials) => {
       try {
-        return apiClient.post('/auth/login/', credentials);
+        return apiClient.post('/auth/login/', credentials)
+          .catch(error => {
+            if (error.response && error.response.status === 401) {
+              // Transform the error to have a more user-friendly message
+              const customError = new Error('Invalid credentials. Please check your email and password.');
+              customError.response = {
+                status: 401,
+                data: { detail: 'Invalid credentials. Please check your email and password.' }
+              };
+              throw customError;
+            }
+            throw error;
+          });
       } catch (error) {
         console.error('API login error:', error);
         throw error;
@@ -158,6 +194,19 @@ const api = {
       }
     },
     getUser: () => {
+      const now = Date.now();
+      // Throttle requests to prevent excessive polling
+      if (now - lastUserRequestTime < USER_REQUEST_THROTTLE_MS) {
+        console.warn('User request throttled to prevent excessive API calls');
+        return Promise.reject({
+          response: {
+            status: 429,
+            data: { detail: 'Too many requests. Please try again later.' }
+          }
+        });
+      }
+      
+      lastUserRequestTime = now;
       try {
         return apiClient.get('/auth/user/');
       } catch (error) {

@@ -82,10 +82,16 @@ export const logout = createAsyncThunk(
       
       // Call logout API with refresh token if available
       if (auth.isAuthenticated && refreshToken) {
-        await api.auth.logout({ refresh: refreshToken });
+        try {
+          await api.auth.logout({ refresh: refreshToken });
+        } catch (error) {
+          // If token is blacklisted or any other error, just continue with local logout
+          console.warn('Logout API call failed:', error.message);
+          // We'll still proceed with local logout
+        }
       }
       
-      // Remove tokens from localStorage
+      // Remove tokens from localStorage regardless of API call success
       localStorage.removeItem('token');
       localStorage.removeItem('refresh_token');
       
@@ -110,16 +116,23 @@ export const getCurrentUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       // Don't show error toast for 401 errors when checking current user
-      if (error.response && error.response.status === 401) {
-        // Clear token if it's invalid
-        localStorage.removeItem('token');
-        localStorage.removeItem('refresh_token');
-        
-        // Dispatch logout to clean up state
-        dispatch(logout());
-        
-        return rejectWithValue('Not authenticated');
+      if (error.response) {
+        if (error.response.status === 401) {
+          // Clear token if it's invalid
+          localStorage.removeItem('token');
+          localStorage.removeItem('refresh_token');
+          
+          // Dispatch logout to clean up state
+          dispatch(logout());
+          
+          return rejectWithValue('Not authenticated');
+        } else if (error.response.status === 429) {
+          // Request was throttled, silently fail
+          console.warn('User request throttled:', error.response.data.detail);
+          return rejectWithValue('Request throttled');
+        }
       }
+      
       return rejectWithValue(
         error.response?.data?.detail || 'Failed to fetch user data.'
       );
@@ -237,6 +250,10 @@ const authSlice = createSlice({
             state.isAuthenticated = false;
             state.token = null;
             state.user = null;
+          } else if (action.payload === 'Request throttled') {
+            // Silent failure for throttled requests
+            // Keep existing state intact
+            console.log('User request throttled, keeping existing state');
           } else {
             state.error = action.payload;
             toast.error(action.payload);
