@@ -26,6 +26,8 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
+      console.log('Login attempt with credentials:', { ...credentials, password: '***' });
+      
       // Ensure we're sending both email and username fields
       // If credentials only has email, use it as username too
       const loginData = { ...credentials };
@@ -33,7 +35,16 @@ export const login = createAsyncThunk(
         loginData.username = loginData.email;
       }
       
+      console.log('Sending login request with data:', { ...loginData, password: '***' });
       const response = await api.auth.login(loginData);
+      console.log('Login response received:', response);
+      
+      // Check if we have the expected data
+      if (!response.data || !response.data.token) {
+        console.error('Invalid login response format:', response);
+        return rejectWithValue('Invalid response from server. Please try again.');
+      }
+      
       const { token, user, refresh } = response.data;
       
       // Store token in localStorage
@@ -42,8 +53,10 @@ export const login = createAsyncThunk(
         localStorage.setItem('refresh_token', refresh);
       }
       
+      console.log('Login successful, user data:', user);
       return { token, user, refresh };
     } catch (error) {
+      console.error('Login error:', error);
       return rejectWithValue(
         error.response?.data?.detail || 'Login failed. Please check your credentials.'
       );

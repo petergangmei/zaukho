@@ -50,10 +50,24 @@ function App() {
 
   // Check authentication status when app loads
   useEffect(() => {
+    console.log('App mounted, auth state:', auth);
+    
     // Check if user is authenticated
     if (auth && auth.token && !auth.user) {
+      console.log('Token found but no user data, fetching user data...');
       // Only fetch user data if we have a token but no user data
-      dispatch(getCurrentUser());
+      dispatch(getCurrentUser())
+        .unwrap()
+        .then(userData => {
+          console.log('User data fetched successfully:', userData);
+        })
+        .catch(error => {
+          console.error('Failed to fetch user data:', error);
+        });
+    } else if (auth && auth.token && auth.user) {
+      console.log('User already authenticated:', auth.user);
+    } else if (auth && !auth.token) {
+      console.log('No token found, user is not authenticated');
     }
   }, [dispatch, auth]);
 

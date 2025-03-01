@@ -37,6 +37,7 @@ const persistConfig = {
       in: (state, key) => {
         // Make sure the state is valid before persisting
         if (key === 'auth' && state) {
+          console.log('Persisting auth state:', state);
           return {
             ...state,
             loading: false, // Reset loading state on persist
@@ -48,6 +49,22 @@ const persistConfig = {
       out: (state, key) => {
         // Make sure the state is valid when rehydrating
         if (key === 'auth' && state) {
+          console.log('Rehydrating auth state:', state);
+          
+          // Ensure token is still in localStorage
+          const token = localStorage.getItem('token');
+          if (!token && state.isAuthenticated) {
+            console.warn('Token missing from localStorage but state shows authenticated');
+            return {
+              ...state,
+              isAuthenticated: false,
+              token: null,
+              user: null,
+              loading: false,
+              error: null
+            };
+          }
+          
           return {
             ...state,
             loading: false, // Ensure loading is false when rehydrating

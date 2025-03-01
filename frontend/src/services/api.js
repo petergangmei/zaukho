@@ -158,9 +158,24 @@ const api = {
   // Auth endpoints
   auth: {
     login: (credentials) => {
+      console.log('API login called with:', { ...credentials, password: '***' });
+      
       try {
         return apiClient.post('/auth/login/', credentials)
+          .then(response => {
+            console.log('API login raw response:', response);
+            
+            // Validate response format
+            if (!response.data || !response.data.token) {
+              console.error('Invalid login response format from server:', response);
+              throw new Error('Invalid response format from server');
+            }
+            
+            return response;
+          })
           .catch(error => {
+            console.error('API login error caught:', error);
+            
             if (error.response && error.response.status === 401) {
               // Transform the error to have a more user-friendly message
               const customError = new Error('Invalid credentials. Please check your email and password.');
@@ -170,10 +185,21 @@ const api = {
               };
               throw customError;
             }
+            
+            // For network errors or other issues
+            if (!error.response) {
+              const networkError = new Error('Network error. Please check your connection and try again.');
+              networkError.response = {
+                status: 0,
+                data: { detail: 'Network error. Please check your connection and try again.' }
+              };
+              throw networkError;
+            }
+            
             throw error;
           });
       } catch (error) {
-        console.error('API login error:', error);
+        console.error('API login outer error:', error);
         throw error;
       }
     },

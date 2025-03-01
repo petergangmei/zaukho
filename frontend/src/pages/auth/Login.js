@@ -89,15 +89,38 @@ const Login = () => {
     
     if (validateForm()) {
       try {
+        console.log('Submitting login form with data:', { ...formData, password: '***' });
         const result = await dispatch(login(formData)).unwrap();
+        console.log('Login dispatch result:', result);
+        
+        // Check if we have the expected data
+        if (!result || !result.token) {
+          console.error('Login succeeded but returned invalid data:', result);
+          // Handle this edge case
+          setValidationErrors({
+            ...validationErrors,
+            general: 'Login succeeded but returned invalid data. Please try again.'
+          });
+          return;
+        }
+        
         // Success toast is handled in the auth slice
-        console.log('Login successful:', result);
+        console.log('Login successful, redirecting...');
+        
+        // Force a navigation to the browse page
+        const from = location.state?.from?.pathname || '/browse';
+        navigate(from, { replace: true });
       } catch (err) {
         // Error toast is handled in the auth slice
         console.error('Login failed:', err);
+        
         // If there's an error that wasn't handled by the slice
         if (!err.message && !err.response) {
-          console.error('Unexpected error during login');
+          console.error('Unexpected error during login:', err);
+          setValidationErrors({
+            ...validationErrors,
+            general: 'An unexpected error occurred. Please try again.'
+          });
         }
       }
     }
@@ -106,19 +129,43 @@ const Login = () => {
   // Handle demo login
   const handleDemoLogin = async () => {
     try {
+      console.log('Attempting demo login');
       const result = await dispatch(login({
         email: 'demo@example.com',
         username: 'demo@example.com',
         password: 'password123'
       })).unwrap();
+      
+      console.log('Demo login dispatch result:', result);
+      
+      // Check if we have the expected data
+      if (!result || !result.token) {
+        console.error('Demo login succeeded but returned invalid data:', result);
+        // Handle this edge case
+        setValidationErrors({
+          ...validationErrors,
+          general: 'Login succeeded but returned invalid data. Please try again.'
+        });
+        return;
+      }
+      
       // Success toast is handled in the auth slice
-      console.log('Demo login successful:', result);
+      console.log('Demo login successful, redirecting...');
+      
+      // Force a navigation to the browse page
+      const from = location.state?.from?.pathname || '/browse';
+      navigate(from, { replace: true });
     } catch (err) {
       // Error toast is handled in the auth slice
       console.error('Demo login failed:', err);
+      
       // If there's an error that wasn't handled by the slice
       if (!err.message && !err.response) {
-        console.error('Unexpected error during demo login');
+        console.error('Unexpected error during demo login:', err);
+        setValidationErrors({
+          ...validationErrors,
+          general: 'An unexpected error occurred. Please try again.'
+        });
       }
     }
   };
@@ -148,6 +195,13 @@ const Login = () => {
           {error && (
             <div className="mb-4 p-3 bg-red-900 bg-opacity-50 border border-red-800 rounded text-red-200 text-sm">
               {error}
+            </div>
+          )}
+          
+          {/* General validation error */}
+          {validationErrors.general && (
+            <div className="mb-4 p-3 bg-red-900 bg-opacity-50 border border-red-800 rounded text-red-200 text-sm">
+              {validationErrors.general}
             </div>
           )}
           
