@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+import api from '../../../services/api';
+import { toast } from 'react-toastify';
 
-// Initial state
+/**
+ * Initial state for the movies slice
+ */
 const initialState = {
   movies: [],
   featuredMovies: [],
@@ -10,7 +13,9 @@ const initialState = {
   error: null,
 };
 
-// Async thunks
+/**
+ * Async thunk to fetch all movies
+ */
 export const fetchMovies = createAsyncThunk(
   'movies/fetchMovies',
   async (params, { rejectWithValue }) => {
@@ -25,6 +30,9 @@ export const fetchMovies = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch featured movies
+ */
 export const fetchFeaturedMovies = createAsyncThunk(
   'movies/fetchFeaturedMovies',
   async (_, { rejectWithValue }) => {
@@ -39,6 +47,9 @@ export const fetchFeaturedMovies = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch a movie by ID
+ */
 export const fetchMovieById = createAsyncThunk(
   'movies/fetchMovieById',
   async (id, { rejectWithValue }) => {
@@ -53,6 +64,9 @@ export const fetchMovieById = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch movies by category
+ */
 export const fetchMoviesByCategory = createAsyncThunk(
   'movies/fetchMoviesByCategory',
   async (categoryId, { rejectWithValue }) => {
@@ -67,74 +81,144 @@ export const fetchMoviesByCategory = createAsyncThunk(
   }
 );
 
-// Create slice
+/**
+ * Movies slice with reducers and extra reducers for async actions
+ */
 const moviesSlice = createSlice({
   name: 'movies',
   initialState,
   reducers: {
     clearCurrentMovie: (state) => {
-      state.currentMovie = null;
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        currentMovie: null
+      };
     },
     clearMoviesError: (state) => {
-      state.error = null;
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        error: null
+      };
     },
   },
   extraReducers: (builder) => {
     builder
       // Fetch all movies
       .addCase(fetchMovies.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchMovies.fulfilled, (state, action) => {
-        state.loading = false;
-        state.movies = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          movies: action.payload.results || action.payload
+        };
       })
       .addCase(fetchMovies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch featured movies
       .addCase(fetchFeaturedMovies.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchFeaturedMovies.fulfilled, (state, action) => {
-        state.loading = false;
-        state.featuredMovies = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          featuredMovies: action.payload.results || action.payload
+        };
       })
       .addCase(fetchFeaturedMovies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch movie by ID
       .addCase(fetchMovieById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchMovieById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentMovie = action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          currentMovie: action.payload
+        };
       })
       .addCase(fetchMovieById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch movies by category
       .addCase(fetchMoviesByCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchMoviesByCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.movies = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          movies: action.payload.results || action.payload
+        };
       })
       .addCase(fetchMoviesByCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       });
   },
 });

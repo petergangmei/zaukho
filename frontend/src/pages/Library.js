@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLibrary } from '../store/slices/librarySlice';
-import { selectPurchases, selectRentals, selectLibraryLoading, selectLibraryError } from '../store/slices/librarySlice';
+import { fetchLibrary } from '../config/redux/slices/librarySlice';
+import { selectPurchases, selectRentals, selectLibraryLoading, selectLibraryError } from '../config/redux/slices/librarySlice';
 import MediaCard from '../components/common/MediaCard';
 import { toast } from 'react-toastify';
 

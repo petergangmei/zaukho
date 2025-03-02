@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContentById } from '../store/slices/contentSlice';
-import { createPurchase, createRental } from '../store/slices/librarySlice';
-import { addToWatchlist, removeFromWatchlist } from '../store/slices/watchlistSlice';
-import { selectContentDetails, selectContentLoading, selectContentError } from '../store/slices/contentSlice';
-import { selectWatchlist } from '../store/slices/watchlistSlice';
-import { selectIsAuthenticated } from '../store/slices/authSlice';
+import { fetchContentById } from '../config/redux/slices/contentSlice';
+import { createPurchase, createRental } from '../config/redux/slices/librarySlice';
+import { addToWatchlist, removeFromWatchlist } from '../config/redux/slices/watchlistSlice';
+import { selectContentDetails, selectContentLoading, selectContentError } from '../config/redux/slices/contentSlice';
+import { selectWatchlist } from '../config/redux/slices/watchlistSlice';
+import { selectIsAuthenticated } from '../config/redux/slices/authSlice';
 import { toast } from 'react-toastify';
 import Button from '../components/common/Button';
 

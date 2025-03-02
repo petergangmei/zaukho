@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+import api from '../../../services/api';
 import { toast } from 'react-toastify';
 
-// Helper function to safely get token from localStorage
+/**
+ * Helper function to safely get token from localStorage
+ */
 const getTokenFromStorage = () => {
   try {
     return localStorage.getItem('token') || null;
@@ -12,7 +14,9 @@ const getTokenFromStorage = () => {
   }
 };
 
-// Initial state
+/**
+ * Initial state for the auth slice
+ */
 const initialState = {
   user: null,
   token: getTokenFromStorage(),
@@ -21,7 +25,9 @@ const initialState = {
   error: null,
 };
 
-// Async thunks
+/**
+ * Async thunk for user login
+ */
 export const login = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue, getState }) => {
@@ -66,6 +72,9 @@ export const login = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk for user registration
+ */
 export const register = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
@@ -88,6 +97,9 @@ export const register = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk for user logout
+ */
 export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue, getState }) => {
@@ -123,6 +135,9 @@ export const logout = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to get current user data
+ */
 export const getCurrentUser = createAsyncThunk(
   'auth/getCurrentUser',
   async (_, { rejectWithValue, dispatch }) => {
@@ -155,7 +170,9 @@ export const getCurrentUser = createAsyncThunk(
   }
 );
 
-// Create slice
+/**
+ * Auth slice with reducers and extra reducers for async actions
+ */
 const authSlice = createSlice({
   name: 'auth',
   initialState,

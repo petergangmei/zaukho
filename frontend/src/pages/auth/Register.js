@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormInput, Button } from '../../components/common';
-import { register, selectAuth, clearError } from '../../store/slices/authSlice';
+import { register, selectAuth, clearError } from '../../config/redux/slices/authSlice';
 
 const Register = () => {
   const navigate = useNavigate();

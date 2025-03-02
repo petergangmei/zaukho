@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchWatchlist, removeFromWatchlist } from '../store/slices/watchlistSlice';
-import { selectWatchlist, selectWatchlistLoading, selectWatchlistError } from '../store/slices/watchlistSlice';
-import { selectIsAuthenticated } from '../store/slices/authSlice';
+import { fetchWatchlist, removeFromWatchlist } from '../config/redux/slices/watchlistSlice';
+import { selectWatchlist, selectWatchlistLoading, selectWatchlistError } from '../config/redux/slices/watchlistSlice';
+import { selectIsAuthenticated } from '../config/redux/slices/authSlice';
 import { toast } from 'react-toastify';
 import Button from '../components/common/Button';
 

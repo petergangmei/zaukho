@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../services/api';
+import api from '../../../services/api';
+import { toast } from 'react-toastify';
 
-// Initial state
+/**
+ * Initial state for the TV series slice
+ */
 const initialState = {
   tvSeries: [],
   featuredTvSeries: [],
@@ -14,7 +17,9 @@ const initialState = {
   error: null,
 };
 
-// Async thunks
+/**
+ * Async thunk to fetch all TV series
+ */
 export const fetchTvSeries = createAsyncThunk(
   'tvSeries/fetchTvSeries',
   async (params, { rejectWithValue }) => {
@@ -29,6 +34,9 @@ export const fetchTvSeries = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch featured TV series
+ */
 export const fetchFeaturedTvSeries = createAsyncThunk(
   'tvSeries/fetchFeaturedTvSeries',
   async (_, { rejectWithValue }) => {
@@ -43,6 +51,9 @@ export const fetchFeaturedTvSeries = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch a TV series by ID
+ */
 export const fetchTvSeriesById = createAsyncThunk(
   'tvSeries/fetchTvSeriesById',
   async (id, { rejectWithValue }) => {
@@ -57,6 +68,9 @@ export const fetchTvSeriesById = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch TV series by category
+ */
 export const fetchTvSeriesByCategory = createAsyncThunk(
   'tvSeries/fetchTvSeriesByCategory',
   async (categoryId, { rejectWithValue }) => {
@@ -71,6 +85,9 @@ export const fetchTvSeriesByCategory = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch seasons by TV series
+ */
 export const fetchSeasonsByTvSeries = createAsyncThunk(
   'tvSeries/fetchSeasonsByTvSeries',
   async (tvSeriesId, { rejectWithValue }) => {
@@ -85,6 +102,9 @@ export const fetchSeasonsByTvSeries = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch a season by ID
+ */
 export const fetchSeasonById = createAsyncThunk(
   'tvSeries/fetchSeasonById',
   async (seasonId, { rejectWithValue }) => {
@@ -99,6 +119,9 @@ export const fetchSeasonById = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch episodes by season
+ */
 export const fetchEpisodesBySeason = createAsyncThunk(
   'tvSeries/fetchEpisodesBySeason',
   async (seasonId, { rejectWithValue }) => {
@@ -113,6 +136,9 @@ export const fetchEpisodesBySeason = createAsyncThunk(
   }
 );
 
+/**
+ * Async thunk to fetch an episode by ID
+ */
 export const fetchEpisodeById = createAsyncThunk(
   'tvSeries/fetchEpisodeById',
   async (episodeId, { rejectWithValue }) => {
@@ -127,136 +153,274 @@ export const fetchEpisodeById = createAsyncThunk(
   }
 );
 
-// Create slice
+/**
+ * TV Series slice with reducers and extra reducers for async actions
+ */
 const tvSeriesSlice = createSlice({
   name: 'tvSeries',
   initialState,
   reducers: {
     clearCurrentTvSeries: (state) => {
-      state.currentTvSeries = null;
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        currentTvSeries: null
+      };
     },
     clearCurrentSeason: (state) => {
-      state.currentSeason = null;
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        currentSeason: null
+      };
     },
     clearCurrentEpisode: (state) => {
-      state.currentEpisode = null;
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        currentEpisode: null
+      };
     },
     clearTvSeriesError: (state) => {
-      state.error = null;
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        error: null
+      };
     },
   },
   extraReducers: (builder) => {
     builder
       // Fetch all TV series
       .addCase(fetchTvSeries.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchTvSeries.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tvSeries = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          tvSeries: action.payload.results || action.payload
+        };
       })
       .addCase(fetchTvSeries.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch featured TV series
       .addCase(fetchFeaturedTvSeries.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchFeaturedTvSeries.fulfilled, (state, action) => {
-        state.loading = false;
-        state.featuredTvSeries = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          featuredTvSeries: action.payload.results || action.payload
+        };
       })
       .addCase(fetchFeaturedTvSeries.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch TV series by ID
       .addCase(fetchTvSeriesById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchTvSeriesById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentTvSeries = action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          currentTvSeries: action.payload
+        };
       })
       .addCase(fetchTvSeriesById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch TV series by category
       .addCase(fetchTvSeriesByCategory.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchTvSeriesByCategory.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tvSeries = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          tvSeries: action.payload.results || action.payload
+        };
       })
       .addCase(fetchTvSeriesByCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch seasons by TV series
       .addCase(fetchSeasonsByTvSeries.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchSeasonsByTvSeries.fulfilled, (state, action) => {
-        state.loading = false;
-        state.seasons = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          seasons: action.payload.results || action.payload
+        };
       })
       .addCase(fetchSeasonsByTvSeries.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch season by ID
       .addCase(fetchSeasonById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchSeasonById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentSeason = action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          currentSeason: action.payload
+        };
       })
       .addCase(fetchSeasonById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch episodes by season
       .addCase(fetchEpisodesBySeason.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchEpisodesBySeason.fulfilled, (state, action) => {
-        state.loading = false;
-        state.episodes = action.payload.results || action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          episodes: action.payload.results || action.payload
+        };
       })
       .addCase(fetchEpisodesBySeason.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Fetch episode by ID
       .addCase(fetchEpisodeById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(fetchEpisodeById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentEpisode = action.payload;
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          currentEpisode: action.payload
+        };
       })
       .addCase(fetchEpisodeById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       });
   },
 });

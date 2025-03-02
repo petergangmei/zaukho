@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { logout, selectAuth, selectUser } from '../store/slices/authSlice';
+import { logout, selectAuth, selectUser } from '../config/redux/slices/authSlice';
 // Remove SCSS import since we'll use Tailwind CSS
 // import './Header.scss';
 

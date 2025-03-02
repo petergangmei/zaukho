@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { getCurrentUser, selectAuth, resetLoading } from '../../store/slices/authSlice';
+import { getCurrentUser, selectAuth, resetLoading } from '../../config/redux/slices/authSlice';
 import { LoadingSpinner } from '../common';
 
 /**
