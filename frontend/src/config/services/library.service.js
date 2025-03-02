@@ -5,14 +5,12 @@ import apiClient from './apiClient';
  * Handles operations related to user's content library
  */
 
-/**
- * Get the user's content library
- * @returns {Promise} - API response with library items
- */
-const getLibrary = () => apiClient.get('/library/');
-
 const libraryService = {
-  getLibrary
+  /**
+   * Get the user's content library
+   * @returns {Promise} - API response with library items
+   */
+  get: () => apiClient.get('/library/'),
 };
 
 export default libraryService; 
