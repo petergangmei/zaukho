@@ -24,16 +24,16 @@ const initialState = {
 // Async thunks
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials, { rejectWithValue }) => {
+  async (credentials, { rejectWithValue, getState }) => {
     try {
       console.log('Login attempt with credentials:', { ...credentials, password: '***' });
+      console.log('Current auth state before login:', getState().auth);
       
-      // Ensure we're sending both email and username fields
-      // If credentials only has email, use it as username too
-      const loginData = { ...credentials };
-      if (loginData.email && !loginData.username) {
-        loginData.username = loginData.email;
-      }
+      // Create a copy of the credentials with just email and password
+      const loginData = {
+        email: credentials.email,
+        password: credentials.password
+      };
       
       console.log('Sending login request with data:', { ...loginData, password: '***' });
       const response = await api.auth.login(loginData);
@@ -46,6 +46,7 @@ export const login = createAsyncThunk(
       }
       
       const { token, user, refresh } = response.data;
+      console.log('Login successful, extracted data:', { token: '***', user, refresh: '***' });
       
       // Store token in localStorage
       localStorage.setItem('token', token);
@@ -53,7 +54,8 @@ export const login = createAsyncThunk(
         localStorage.setItem('refresh_token', refresh);
       }
       
-      console.log('Login successful, user data:', user);
+      console.log('Tokens stored in localStorage');
+      console.log('Login successful, returning data to reducer');
       return { token, user, refresh };
     } catch (error) {
       console.error('Login error:', error);
@@ -159,118 +161,200 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearError: (state) => {
-      // Check if state exists before setting error to null
-      if (state) {
-        state.error = null;
-      }
+      console.log('Clearing error, current state:', state);
+      
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        error: null
+      };
     },
   },
   extraReducers: (builder) => {
     builder
       // Login
       .addCase(login.pending, (state) => {
-        if (state) {
-          state.loading = true;
-          state.error = null;
-        }
+        console.log('Login pending, current state:', state);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(login.fulfilled, (state, action) => {
-        if (state) {
-          state.loading = false;
-          state.isAuthenticated = true;
-          state.token = action.payload.token;
-          state.user = action.payload.user;
-          toast.success('Login successful! Welcome back.');
-        }
+        console.log('Login fulfilled, current state:', state);
+        console.log('Login fulfilled, action payload:', action.payload);
+        
+        // Show success toast
+        toast.success('Login successful! Welcome back.');
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          isAuthenticated: true,
+          token: action.payload.token,
+          user: action.payload.user,
+          error: null
+        };
       })
       .addCase(login.rejected, (state, action) => {
-        if (state) {
-          state.loading = false;
-          state.error = action.payload;
-          toast.error(action.payload);
-        }
+        console.log('Login rejected, current state:', state);
+        console.log('Login rejected, action payload:', action.payload);
+        
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Register
       .addCase(register.pending, (state) => {
-        if (state) {
-          state.loading = true;
-          state.error = null;
-        }
+        console.log('Register pending, current state:', state);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(register.fulfilled, (state, action) => {
-        if (state) {
-          state.loading = false;
-          state.isAuthenticated = true;
-          state.token = action.payload.token;
-          state.user = action.payload.user;
-          toast.success('Registration successful! Welcome to ZAUKHO.');
-        }
+        console.log('Register fulfilled, current state:', state);
+        console.log('Register fulfilled, action payload:', action.payload);
+        
+        // Show success toast
+        toast.success('Registration successful! Welcome to ZAUKHO.');
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          isAuthenticated: true,
+          token: action.payload.token,
+          user: action.payload.user,
+          error: null
+        };
       })
       .addCase(register.rejected, (state, action) => {
-        if (state) {
-          state.loading = false;
-          state.error = action.payload;
-          toast.error(action.payload);
-        }
+        console.log('Register rejected, current state:', state);
+        console.log('Register rejected, action payload:', action.payload);
+        
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          error: action.payload
+        };
       })
       
       // Logout
       .addCase(logout.pending, (state) => {
-        if (state) {
-          state.loading = true;
-        }
+        console.log('Logout pending, current state:', state);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true
+        };
       })
       .addCase(logout.fulfilled, (state) => {
-        if (state) {
-          state.loading = false;
-          state.isAuthenticated = false;
-          state.token = null;
-          state.user = null;
-          toast.success('You have been logged out successfully.');
-        }
+        console.log('Logout fulfilled, current state:', state);
+        
+        // Show success toast
+        toast.success('You have been logged out successfully.');
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          isAuthenticated: false,
+          token: null,
+          user: null,
+          error: null
+        };
       })
       .addCase(logout.rejected, (state, action) => {
-        if (state) {
-          state.loading = false;
-          state.isAuthenticated = false;
-          state.token = null;
-          state.user = null;
-          state.error = action.payload;
-          toast.error(action.payload);
-        }
+        console.log('Logout rejected, current state:', state);
+        console.log('Logout rejected, action payload:', action.payload);
+        
+        // Show error toast
+        toast.error(action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          isAuthenticated: false,
+          token: null,
+          user: null,
+          error: action.payload
+        };
       })
       
       // Get current user
       .addCase(getCurrentUser.pending, (state) => {
-        if (state) {
-          state.loading = true;
-          state.error = null;
-        }
+        console.log('GetCurrentUser pending, current state:', state);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: true,
+          error: null
+        };
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
-        if (state) {
-          state.loading = false;
-          state.user = action.payload;
-          state.isAuthenticated = true;
-        }
+        console.log('GetCurrentUser fulfilled, current state:', state);
+        console.log('GetCurrentUser fulfilled, action payload:', action.payload);
+        
+        // Create a completely new state object to ensure Redux updates properly
+        return {
+          ...state,
+          loading: false,
+          isAuthenticated: true,
+          user: action.payload,
+          error: null
+        };
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
-        if (state) {
-          state.loading = false;
-          if (action.payload === 'Not authenticated') {
-            // Silent failure for auth check
-            state.isAuthenticated = false;
-            state.token = null;
-            state.user = null;
-          } else if (action.payload === 'Request throttled') {
-            // Silent failure for throttled requests
-            // Keep existing state intact
-            console.log('User request throttled, keeping existing state');
-          } else {
-            state.error = action.payload;
-            toast.error(action.payload);
-          }
+        console.log('GetCurrentUser rejected, current state:', state);
+        console.log('GetCurrentUser rejected, action payload:', action.payload);
+        
+        if (action.payload === 'Not authenticated') {
+          // Silent failure for auth check
+          return {
+            ...state,
+            loading: false,
+            isAuthenticated: false,
+            token: null,
+            user: null,
+            error: null
+          };
+        } else if (action.payload === 'Request throttled') {
+          // Silent failure for throttled requests
+          // Keep existing state intact
+          console.log('User request throttled, keeping existing state');
+          return state;
+        } else {
+          // Show error toast
+          toast.error(action.payload);
+          
+          // Create a completely new state object to ensure Redux updates properly
+          return {
+            ...state,
+            loading: false,
+            error: action.payload
+          };
         }
       });
   },

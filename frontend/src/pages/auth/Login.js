@@ -12,7 +12,6 @@ const Login = () => {
   
   const [formData, setFormData] = useState({
     email: '',
-    username: '',
     password: ''
   });
   const [validationErrors, setValidationErrors] = useState({});
@@ -38,19 +37,10 @@ const Login = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // If email is being updated, also update username to match
-    if (name === 'email') {
-      setFormData({
-        ...formData,
-        [name]: value,
-        username: value // Keep username in sync with email
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
+    setFormData({
+      ...formData,
+      [name]: value
+    });
     
     // Clear error when user starts typing
     if (validationErrors[name]) {
@@ -89,8 +79,14 @@ const Login = () => {
     
     if (validateForm()) {
       try {
-        console.log('Submitting login form with data:', { ...formData, password: '***' });
-        const result = await dispatch(login(formData)).unwrap();
+        // Create login data with email only (backend will handle it)
+        const loginData = {
+          email: formData.email,
+          password: formData.password
+        };
+        
+        console.log('Submitting login form with data:', { ...loginData, password: '***' });
+        const result = await dispatch(login(loginData)).unwrap();
         console.log('Login dispatch result:', result);
         
         // Check if we have the expected data
@@ -132,7 +128,6 @@ const Login = () => {
       console.log('Attempting demo login');
       const result = await dispatch(login({
         email: 'demo@example.com',
-        username: 'demo@example.com',
         password: 'password123'
       })).unwrap();
       

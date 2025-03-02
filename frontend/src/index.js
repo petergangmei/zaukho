@@ -30,4 +30,13 @@ root.render(
       </PersistGate>
     </Provider>
   </React.StrictMode>
-); 
+);
+
+// Add a listener for Redux persist rehydration
+store.subscribe(() => {
+  const state = store.getState();
+  if (state._persist && state._persist.rehydrated) {
+    console.log('Redux persist rehydration complete');
+    console.log('Auth state after rehydration:', state.auth);
+  }
+}); 

@@ -11,38 +11,34 @@ from .auth_serializers import UserSerializer, RegisterSerializer
 @permission_classes([AllowAny])
 def login_view(request):
     """
-    Custom login view that validates username and password,
+    Custom login view that validates email and password,
     and returns JWT tokens with user details
     """
-    username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
-    print('------   ')
-    print(email, password)
-    print('------   ')
+    
+    print("Login attempt with email:", email)
+    
     if not password:
+        print("Password missing")
         return Response(
             {'detail': 'Password is required.'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    # Allow login with either username or email
-    if not username and not email:
+    # Email is required
+    if not email:
+        print("Email missing")
         return Response(
-            {'detail': 'Username or email is required.'},
+            {'detail': 'Email is required.'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    # If email is provided but not username, try to get the user by email
-    if email and not username:
-        try:
-            user = User.objects.get(email=email)
-            username = user.username
-        except User.DoesNotExist:
-            pass
-    
-    # Authenticate user
-    user = authenticate(username=username, password=password)
+    # Authenticate user with email as username
+    # Our custom backend will handle this
+    print("Attempting authentication with email:", email)
+    user = authenticate(request, username=email, password=password)
+    print("Authentication result:", user)
     
     if user is not None:
         # Generate tokens
@@ -51,13 +47,16 @@ def login_view(request):
         # Serialize user data
         serializer = UserSerializer(user)
         
-        return Response({
+        response_data = {
             'user': serializer.data,
             'token': str(refresh.access_token),
             'refresh': str(refresh),
             'detail': 'Login successful'
-        })
+        }
+        print("Login successful, returning tokens")
+        return Response(response_data)
     else:
+        print("Authentication failed for email:", email)
         return Response(
             {'detail': 'Invalid credentials. Please try again.'},
             status=status.HTTP_401_UNAUTHORIZED

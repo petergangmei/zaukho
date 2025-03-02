@@ -71,6 +71,19 @@ function App() {
     }
   }, [dispatch, auth]);
 
+  // Add a separate effect to log auth state changes
+  useEffect(() => {
+    console.log('Auth state changed:', {
+      isAuthenticated: auth?.isAuthenticated,
+      hasToken: !!auth?.token,
+      hasUser: !!auth?.user,
+      localStorage: {
+        token: !!localStorage.getItem('token'),
+        refresh_token: !!localStorage.getItem('refresh_token')
+      }
+    });
+  }, [auth?.isAuthenticated, auth?.token, auth?.user]);
+
   return (
     <div className="app">
       <Header />

@@ -61,7 +61,14 @@ const LoginForm = () => {
     
     if (validateForm()) {
       try {
-        await dispatch(login(formData)).unwrap();
+        // Create login data with email only (backend will handle it)
+        const loginData = {
+          email: formData.email,
+          password: formData.password
+        };
+        
+        console.log('Submitting login with email:', formData.email);
+        await dispatch(login(loginData)).unwrap();
         navigate('/browse');
       } catch (err) {
         // Error is handled by the auth slice

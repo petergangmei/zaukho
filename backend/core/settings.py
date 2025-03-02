@@ -184,3 +184,9 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 }
+
+# Custom authentication backends
+AUTHENTICATION_BACKENDS = [
+    'zaukho_api.auth_backends.EmailOrUsernameModelBackend',  # Custom backend for email login
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+]
