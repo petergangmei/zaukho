@@ -29,7 +29,11 @@ let failedQueue = [];
 
 // Track last user request time to prevent excessive polling
 let lastUserRequestTime = 0;
-const USER_REQUEST_THROTTLE_MS = 10000; // 10 seconds minimum between requests
+const USER_REQUEST_THROTTLE_MS = 3000; // 3 seconds minimum between requests (reduced from 10s)
+// Cache for user data to reduce API calls
+let userDataCache = null;
+let userDataCacheTime = 0;
+const USER_CACHE_TTL_MS = 60000; // 1 minute cache TTL
 
 // Process the queue of failed requests
 const processQueue = (error, token = null) => {
@@ -221,9 +225,23 @@ const api = {
     },
     getUser: () => {
       const now = Date.now();
+      
+      // Return cached user data if available and not expired
+      if (userDataCache && (now - userDataCacheTime < USER_CACHE_TTL_MS)) {
+        console.log('Returning cached user data');
+        return Promise.resolve({ data: userDataCache });
+      }
+      
       // Throttle requests to prevent excessive polling
       if (now - lastUserRequestTime < USER_REQUEST_THROTTLE_MS) {
         console.warn('User request throttled to prevent excessive API calls');
+        
+        // If we have cached data, return it even if throttled
+        if (userDataCache) {
+          console.log('Returning cached user data during throttling');
+          return Promise.resolve({ data: userDataCache });
+        }
+        
         return Promise.reject({
           response: {
             status: 429,
@@ -234,7 +252,13 @@ const api = {
       
       lastUserRequestTime = now;
       try {
-        return apiClient.get('/auth/user/');
+        return apiClient.get('/auth/user/')
+          .then(response => {
+            // Cache the user data
+            userDataCache = response.data;
+            userDataCacheTime = now;
+            return response;
+          });
       } catch (error) {
         console.error('API getUser error:', error);
         throw error;

@@ -33,10 +33,18 @@ root.render(
 );
 
 // Add a listener for Redux persist rehydration
+let rehydrated = false;
 store.subscribe(() => {
   const state = store.getState();
-  if (state._persist && state._persist.rehydrated) {
+  if (state._persist && state._persist.rehydrated && !rehydrated) {
+    rehydrated = true;
     console.log('Redux persist rehydration complete');
     console.log('Auth state after rehydration:', state.auth);
+    
+    // Reset loading state after rehydration if it's still true
+    if (state.auth && state.auth.loading) {
+      console.log('Resetting loading state after rehydration');
+      store.dispatch({ type: 'auth/resetLoading' });
+    }
   }
 }); 

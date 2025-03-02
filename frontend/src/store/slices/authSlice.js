@@ -169,6 +169,15 @@ const authSlice = createSlice({
         error: null
       };
     },
+    resetLoading: (state) => {
+      console.log('Resetting loading state, current state:', state);
+      
+      // Create a completely new state object to ensure Redux updates properly
+      return {
+        ...state,
+        loading: false
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -361,7 +370,7 @@ const authSlice = createSlice({
 });
 
 // Export actions
-export const { clearError } = authSlice.actions;
+export const { clearError, resetLoading } = authSlice.actions;
 
 // Export selectors
 export const selectAuth = (state) => state.auth;

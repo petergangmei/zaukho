@@ -52,6 +52,13 @@ function App() {
   useEffect(() => {
     console.log('App mounted, auth state:', auth);
     
+    // Reset loading state if it's stuck
+    if (auth && auth.loading) {
+      console.log('Resetting stuck loading state');
+      // Dispatch an action to reset loading state
+      dispatch({ type: 'auth/resetLoading' });
+    }
+    
     // Check if user is authenticated
     if (auth && auth.token && !auth.user) {
       console.log('Token found but no user data, fetching user data...');
