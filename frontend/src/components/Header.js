@@ -3,8 +3,6 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { logout, selectAuth, selectUser } from '../config/redux/slices/authSlice';
-// Remove SCSS import since we'll use Tailwind CSS
-// import './Header.scss';
 
 const Header = () => {
   const navigate = useNavigate();

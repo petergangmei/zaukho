@@ -4,7 +4,9 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 // Import from new config structure
 import { store, persistor } from './config/redux';
-import './index.scss';
+// Remove SCSS import
+// import './index.scss';
+import './index.css';
 import App from './App';
 
 // Import Bootstrap and FontAwesome

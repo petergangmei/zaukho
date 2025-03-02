@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import './App.scss';
 
 // Import from new config structure
 import { getCurrentUser, selectAuth } from './config/redux/slices/authSlice';
@@ -66,9 +65,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="app">
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="main-content">
+        <main className="flex-1 py-5">
           <AppRouter />
         </main>
         <Footer />
