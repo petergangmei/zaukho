@@ -35,6 +35,11 @@ const ProtectedRoute = ({ children }) => {
   });
 
   useEffect(() => {
+    // Skip the effect if auth has already been checked
+    if (authChecked) {
+      return;
+    }
+
     // Set a timeout to prevent infinite loading state
     const timeoutId = setTimeout(() => {
       console.log('Auth check timeout reached');
@@ -66,10 +71,10 @@ const ProtectedRoute = ({ children }) => {
       });
 
     return () => clearTimeout(timeoutId);
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated, authChecked]); // Add authChecked to dependencies
 
   // Show loading spinner while checking authentication
-  if (loading && !authCheckTimeout) {
+  if (loading && !authCheckTimeout && !authChecked) {
     console.log('Showing loading spinner');
     return <LoadingSpinner message="Checking authentication..." />;
   }

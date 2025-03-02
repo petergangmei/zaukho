@@ -40,8 +40,12 @@ const GuestRoute = ({ children }) => {
   if (isAuthenticated) {
     console.log('User is authenticated, redirecting to browse');
     
-    // Get the intended destination from location state, or default to browse
-    const from = location.state?.from?.pathname || '/browse';
+    // Use a fixed destination to prevent potential redirect loops
+    // Only use location state if it's not coming from a protected route redirect
+    const from = (location.state?.from?.pathname && !location.state?.from?.pathname.includes('/login'))
+      ? location.state.from.pathname 
+      : '/browse';
+    
     return <Navigate to={from} replace />;
   }
 

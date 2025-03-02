@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated } from '../config/redux/slices/authSlice';
 import { HeroSection, ContentRow } from '../components/common';
 
 const Browse = () => {
   const navigate = useNavigate();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   
   // Check if user is logged in, redirect to login if not
+  // This check is now redundant since ProtectedRoute already handles this
+  // But keeping it with correct token name and proper dependency for safety
   useEffect(() => {
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) {
+    // Only redirect if not authenticated according to Redux state
+    if (!isAuthenticated) {
       navigate('/login');
     }
-  }, [navigate]);
+  }, [navigate, isAuthenticated]); // Add isAuthenticated as dependency
 
   // Mock featured content for hero section
   const featuredContent = {
