@@ -15,176 +15,189 @@ let userDataCacheTime = 0;
 const USER_CACHE_TTL_MS = 60000; // 1 minute cache TTL
 
 /**
- * Authentication service with methods for login, registration, and user management
+ * Authenticate user with credentials
+ * @param {Object} credentials - User login credentials
+ * @returns {Promise} - API response
  */
-const authService = {
-  /**
-   * Log in a user with email and password
-   * @param {Object} credentials - User credentials (email, password)
-   * @returns {Promise} - API response with token
-   */
-  login: (credentials) => {
-    console.log('API login called with:', { ...credentials, password: '***' });
+const login = (credentials) => {
+  console.log('API login called with:', { ...credentials, password: '***' });
+  
+  try {
+    return apiClient.post('/auth/login/', credentials)
+      .then(response => {
+        console.log('API login raw response:', response);
+        
+        // Validate response format
+        if (!response.data || !response.data.token) {
+          console.error('Invalid login response format from server:', response);
+          throw new Error('Invalid response format from server');
+        }
+        
+        return response;
+      })
+      .catch(error => {
+        console.error('API login error caught:', error);
+        
+        if (error.response && error.response.status === 401) {
+          // Transform the error to have a more user-friendly message
+          const customError = new Error('Invalid credentials. Please check your email and password.');
+          customError.response = {
+            status: 401,
+            data: { detail: 'Invalid credentials. Please check your email and password.' }
+          };
+          throw customError;
+        }
+        
+        // For network errors or other issues
+        if (!error.response) {
+          const networkError = new Error('Network error. Please check your connection and try again.');
+          networkError.response = {
+            status: 0,
+            data: { detail: 'Network error. Please check your connection and try again.' }
+          };
+          throw networkError;
+        }
+        
+        throw error;
+      });
+  } catch (error) {
+    console.error('API login outer error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Register a new user
+ * @param {Object} userData - User registration data
+ * @returns {Promise} - API response
+ */
+const register = (userData) => {
+  try {
+    return apiClient.post('/auth/register/', userData);
+  } catch (error) {
+    console.error('API register error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Log out the current user
+ * @param {Object} data - Logout data (refresh token)
+ * @returns {Promise} - API response
+ */
+const logout = (data) => {
+  try {
+    return apiClient.post('/auth/logout/', data);
+  } catch (error) {
+    console.error('API logout error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get current user data with caching and throttling
+ * @returns {Promise} - API response with user data
+ */
+const getUser = () => {
+  const now = Date.now();
+  
+  // Return cached user data if available and not expired
+  if (userDataCache && (now - userDataCacheTime < USER_CACHE_TTL_MS)) {
+    console.log('Returning cached user data');
+    return Promise.resolve({ data: userDataCache });
+  }
+  
+  // Throttle requests to prevent excessive polling
+  if (now - lastUserRequestTime < USER_REQUEST_THROTTLE_MS) {
+    console.warn('User request throttled to prevent excessive API calls');
     
-    try {
-      return apiClient.post('/auth/login/', credentials)
-        .then(response => {
-          console.log('API login raw response:', response);
-          
-          // Validate response format
-          if (!response.data || !response.data.token) {
-            console.error('Invalid login response format from server:', response);
-            throw new Error('Invalid response format from server');
-          }
-          
-          return response;
-        })
-        .catch(error => {
-          console.error('API login error caught:', error);
-          
-          if (error.response && error.response.status === 401) {
-            // Transform the error to have a more user-friendly message
-            const customError = new Error('Invalid credentials. Please check your email and password.');
-            customError.response = {
-              status: 401,
-              data: { detail: 'Invalid credentials. Please check your email and password.' }
-            };
-            throw customError;
-          }
-          
-          // For network errors or other issues
-          if (!error.response) {
-            const networkError = new Error('Network error. Please check your connection and try again.');
-            networkError.response = {
-              status: 0,
-              data: { detail: 'Network error. Please check your connection and try again.' }
-            };
-            throw networkError;
-          }
-          
-          throw error;
-        });
-    } catch (error) {
-      console.error('API login outer error:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Register a new user
-   * @param {Object} userData - User registration data
-   * @returns {Promise} - API response
-   */
-  register: (userData) => {
-    try {
-      return apiClient.post('/auth/register/', userData);
-    } catch (error) {
-      console.error('API register error:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Log out the current user
-   * @param {Object} data - Logout data (refresh token)
-   * @returns {Promise} - API response
-   */
-  logout: (data) => {
-    try {
-      return apiClient.post('/auth/logout/', data);
-    } catch (error) {
-      console.error('API logout error:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Get current user data with caching and throttling
-   * @returns {Promise} - API response with user data
-   */
-  getUser: () => {
-    const now = Date.now();
-    
-    // Return cached user data if available and not expired
-    if (userDataCache && (now - userDataCacheTime < USER_CACHE_TTL_MS)) {
-      console.log('Returning cached user data');
+    // If we have cached data, return it even if throttled
+    if (userDataCache) {
+      console.log('Returning cached user data during throttling');
       return Promise.resolve({ data: userDataCache });
     }
     
-    // Throttle requests to prevent excessive polling
-    if (now - lastUserRequestTime < USER_REQUEST_THROTTLE_MS) {
-      console.warn('User request throttled to prevent excessive API calls');
-      
-      // If we have cached data, return it even if throttled
-      if (userDataCache) {
-        console.log('Returning cached user data during throttling');
-        return Promise.resolve({ data: userDataCache });
+    return Promise.reject({
+      response: {
+        status: 429,
+        data: { detail: 'Too many requests. Please try again later.' }
       }
-      
-      return Promise.reject({
-        response: {
-          status: 429,
-          data: { detail: 'Too many requests. Please try again later.' }
-        }
+    });
+  }
+  
+  lastUserRequestTime = now;
+  try {
+    return apiClient.get('/auth/user/')
+      .then(response => {
+        // Cache the user data
+        userDataCache = response.data;
+        userDataCacheTime = now;
+        return response;
       });
-    }
-    
-    lastUserRequestTime = now;
-    try {
-      return apiClient.get('/auth/user/')
-        .then(response => {
-          // Cache the user data
-          userDataCache = response.data;
-          userDataCacheTime = now;
-          return response;
-        });
-    } catch (error) {
-      console.error('API getUser error:', error);
-      throw error;
-    }
-  },
+  } catch (error) {
+    console.error('API getUser error:', error);
+    throw error;
+  }
+};
 
-  /**
-   * Refresh the authentication token
-   * @param {string} refreshToken - The refresh token
-   * @returns {Promise} - API response with new token
-   */
-  refreshToken: (refreshToken) => {
-    try {
-      return apiClient.post('/auth/token/refresh/', { refresh: refreshToken });
-    } catch (error) {
-      console.error('API refreshToken error:', error);
-      throw error;
-    }
-  },
+/**
+ * Refresh the authentication token
+ * @param {string} refreshToken - The refresh token
+ * @returns {Promise} - API response with new token
+ */
+const refreshToken = (refreshToken) => {
+  try {
+    return apiClient.post('/auth/token/refresh/', { refresh: refreshToken });
+  } catch (error) {
+    console.error('API refreshToken error:', error);
+    throw error;
+  }
+};
 
-  /**
-   * Verify if a token is valid
-   * @param {string} token - The token to verify
-   * @returns {Promise} - API response
-   */
-  verifyToken: (token) => {
-    try {
-      return apiClient.post('/auth/token/verify/', { token });
-    } catch (error) {
-      console.error('API verifyToken error:', error);
-      throw error;
-    }
-  },
+/**
+ * Verify the authentication token
+ * @param {string} token - The token to verify
+ * @returns {Promise} - API response
+ */
+const verifyToken = (token) => {
+  try {
+    return apiClient.post('/auth/token/verify/', { token });
+  } catch (error) {
+    console.error('API verifyToken error:', error);
+    throw error;
+  }
+};
 
-  /**
-   * Request a password reset email
-   * @param {string} email - User's email address
-   * @returns {Promise} - API response
-   */
-  resetPassword: (email) => apiClient.post('/auth/password-reset/', { email }),
+/**
+ * Request password reset for a user
+ * @param {string} email - User's email
+ * @returns {Promise} - API response
+ */
+const resetPassword = (email) => apiClient.post('/auth/password-reset/', { email });
 
-  /**
-   * Confirm password reset with token and new password
-   * @param {Object} data - Password reset data (token, new password)
-   * @returns {Promise} - API response
-   */
-  confirmResetPassword: (data) => apiClient.post('/auth/password-reset/confirm/', data),
+/**
+ * Confirm password reset with token and new password
+ * @param {Object} data - Password reset confirmation data
+ * @returns {Promise} - API response
+ */
+const confirmResetPassword = (data) => apiClient.post('/auth/password-reset/confirm/', data);
+
+// Clear user data cache (useful when logging out)
+const clearUserCache = () => {
+  userDataCache = null;
+  userDataCacheTime = 0;
+};
+
+const authService = {
+  login,
+  register,
+  logout,
+  getUser,
+  refreshToken,
+  verifyToken,
+  resetPassword,
+  confirmResetPassword,
+  clearUserCache
 };
 
 export default authService; 

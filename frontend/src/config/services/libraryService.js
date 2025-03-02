@@ -1,16 +1,18 @@
 import apiClient from './apiClient';
 
 /**
- * Library service
- * Handles library-related operations
+ * Library Service
+ * Handles operations related to user's content library
  */
 
+/**
+ * Get the user's content library
+ * @returns {Promise} - API response with library items
+ */
+const getLibrary = () => apiClient.get('/library/');
+
 const libraryService = {
-  /**
-   * Get the user's library content
-   * @returns {Promise} - API response with library items
-   */
-  get: () => apiClient.get('/library/'),
+  getLibrary
 };
 
 export default libraryService; 

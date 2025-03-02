@@ -1,17 +1,19 @@
 import apiClient from './apiClient';
 
 /**
- * Search service
- * Handles search-related operations
+ * Search Service
+ * Handles search operations across the platform
  */
 
+/**
+ * Search for content with a query string
+ * @param {string} query - Search query
+ * @returns {Promise} - API response with search results
+ */
+const searchContent = (query) => apiClient.get('/search/', { params: { q: query } });
+
 const searchService = {
-  /**
-   * Search for content
-   * @param {string} query - Search query
-   * @returns {Promise} - API response with search results
-   */
-  content: (query) => apiClient.get('/search/', { params: { q: query } }),
+  searchContent
 };
 
 export default searchService; 

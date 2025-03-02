@@ -1,6 +1,6 @@
 /**
  * Services index file
- * Exports all services for easy importing
+ * Exports all API services for easy importing
  */
 
 import apiClient from './apiClient';
@@ -11,32 +11,13 @@ import categoryService from './categoryService';
 import searchService from './searchService';
 import watchlistService from './watchlistService';
 import libraryService from './libraryService';
-import transactionService from './transactionService';
-import engagementService from './engagementService';
+import purchaseService from './purchaseService';
+import rentalService from './rentalService';
+import ratingService from './ratingService';
+import commentService from './commentService';
+import homeService from './homeService';
 
-// Legacy API export for backward compatibility
-// This can be removed once all components are migrated to use the new services
-const api = {
-  auth: authService,
-  profile: profileService,
-  content: contentService,
-  categories: categoryService,
-  search: searchService,
-  watchlist: watchlistService,
-  library: libraryService,
-  purchases: {
-    create: transactionService.createPurchase,
-  },
-  rentals: {
-    create: transactionService.createRental,
-  },
-  ratings: engagementService.ratings,
-  comments: {
-    ...engagementService.comments,
-    getByContent: (contentId) => contentService.getComments(contentId),
-  },
-};
-
+// Export all services
 export {
   apiClient,
   authService,
@@ -46,10 +27,28 @@ export {
   searchService,
   watchlistService,
   libraryService,
-  transactionService,
-  engagementService,
-  api, // Export legacy API for backward compatibility
+  purchaseService,
+  rentalService,
+  ratingService,
+  commentService,
+  homeService
 };
 
-// Default export for backward compatibility
+// For backward compatibility with the original api.js
+// This allows existing code to continue working while transitioning to the new structure
+const api = {
+  auth: authService,
+  profile: profileService,
+  content: contentService,
+  categories: categoryService,
+  search: searchService,
+  watchlist: watchlistService,
+  library: libraryService,
+  purchases: purchaseService,
+  rentals: rentalService,
+  ratings: ratingService,
+  comments: commentService,
+  home: homeService
+};
+
 export default api; 
